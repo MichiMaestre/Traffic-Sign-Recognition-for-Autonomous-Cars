@@ -8,11 +8,11 @@ https://docs.google.com/spreadsheets/d/1DNZGOJKaiTatEUviT9Bw6kG5VXIltuus_LCciD0h
 
 The project will consist of three iterations:
 
-* 
+* The release for Iteration 1 will be the initialization and design of the package. This includes the research of necessary topics to accomplish the task, design of UMLs and initialization of package files.
 
-* 
+* Iteration 2 will consist of the development of the whole algorithm and creation of the workspace. 
 
-* 
+* Iteration 3 will release a functioning demo of the project, tests and the documentation.
 
 
 ## License
