@@ -1,0 +1,12 @@
+<launch>
+
+<include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch">
+    <arg name="world_file" value ="$(find traffic_sign_recognition)/world/signs_world.sdf"/>
+	<!--<arg name="initial_pose_x" default="9.0"/>
+    <arg name="initial_pose_y" default="6.0"/>
+    <arg name="initial_pose_a" default="3.1415"/>  -->
+
+</include>
+
+
+</launch>

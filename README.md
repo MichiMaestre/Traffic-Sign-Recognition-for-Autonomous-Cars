@@ -1,9 +1,9 @@
 # Traffic Sign Recognition for Autonomous Cars applications using a TurtleBot 2
 [![Build Status](https://travis-ci.org/MichiMaestre/traffic_sign_recognition.svg?branch=master)](https://travis-ci.org/MichiMaestre/traffic_sign_recognition)
-
 [![Coverage Status](https://coveralls.io/repos/github/MichiMaestre/traffic_sign_recognition/badge.svg?branch=master)](https://coveralls.io/github/MichiMaestre/traffic_sign_recognition?branch=master)
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+## Overview
 
 ## Solo Iterative Process
 
@@ -18,6 +18,10 @@ The project will consist of three iterations:
 * Iteration 2 will consist of the development of the whole algorithm and creation of the workspace. 
 
 * Iteration 3 will release a functioning demo of the project, tests and the documentation.
+
+## Sprint Planning
+
+https://docs.google.com/a/terpmail.umd.edu/document/d/1WolcIaDy4VU08c1Y5FMh5BDelXJmd_aV6ZwrNPDOnlo/edit?usp=sharing
 
 
 ## License
