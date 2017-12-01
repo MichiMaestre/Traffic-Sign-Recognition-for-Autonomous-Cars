@@ -21,3 +21,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@author Miguel Maestre Trueba
  *@brief Header file for class classifier
  */
+
+#pragma once
+
+#include <opencv2/highgui/highgui.hpp>
+#include <cv_bridge/cv_bridge.h>
+#include <vector>
+#include "opencv2/opencv.hpp"
+#include "ros/ros.h"
+
+class classifier {
+public:
+	cv::Mat imagen;
+	void imageCallback(const sensor_msgs::ImageConstPtr& msg);
+};

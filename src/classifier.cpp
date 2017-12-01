@@ -21,3 +21,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@author Miguel Maestre Trueba
  *@brief Class classifier definition code
  */
+
+#include <cstdlib>
+#include <string>
+#include <opencv2/highgui/highgui.hpp>
+#include <cv_bridge/cv_bridge.h>
+#include "ros/ros.h"
+#include "opencv2/opencv.hpp"
+#include "ros/console.h"
+#include "classifier.hpp"
+
+void classifier::imageCallback(const sensor_msgs::ImageConstPtr& msg) {
+	cv_bridge::CvImagePtr cv_ptr;
+	try {
+    	cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+    	imagen = cv_ptr->image;
+    	// cv::imshow("view", imagen);
+    	cv::waitKey(30);
+  	}
+  	catch (cv_bridge::Exception& e) {
+    	ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
+  	}
+}

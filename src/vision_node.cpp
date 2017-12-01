@@ -21,3 +21,39 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@author Miguel Maestre Trueba
  *@brief Vision node
  */
+
+#include <cstdlib>
+#include <string>
+// #include <image_transport/image_transport.h>
+#include <opencv2/highgui/highgui.hpp>
+#include <cv_bridge/cv_bridge.h>
+#include "opencv2/opencv.hpp"
+#include "ros/ros.h"
+#include "ros/console.h"
+#include "classifier.hpp"
+
+
+int main(int argc, char **argv) {
+	// Node creation
+	ros::init(argc, argv, "classification");
+	ros::NodeHandle n;
+
+	classifier visual;
+
+	cv::namedWindow("view");
+	cv::startWindowThread();
+
+
+	ros::Subscriber sub = n.subscribe("/camera/rgb/image_raw", 
+		1, &classifier::imageCallback, &visual);
+
+	while (ros::ok()) {
+		
+		if (!visual.imagen.empty())
+    		imshow("view", visual.imagen);
+
+		ros::spinOnce();
+	}
+	cv::destroyWindow("view");
+
+}
