@@ -34,4 +34,8 @@ class classifier {
 public:
 	cv::Mat imagen;
 	void imageCallback(const sensor_msgs::ImageConstPtr& msg);
+
+	cv::Mat deNoise(cv::Mat inputImage);
+
+	std::vector<cv::Mat> MSER_Features(cv::Mat img);
 };

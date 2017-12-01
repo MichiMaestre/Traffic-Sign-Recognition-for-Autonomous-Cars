@@ -38,22 +38,38 @@ int main(int argc, char **argv) {
 	ros::init(argc, argv, "classification");
 	ros::NodeHandle n;
 
+	// Define the classifier object
 	classifier visual;
 
-	cv::namedWindow("view");
-	cv::startWindowThread();
+	// Initializations
+	cv::Mat img_denoise;
+	std::vector<cv::Mat> imgs_mser;
 
+
+	// cv::namedWindow("view");
+	cv::startWindowThread();
 
 	ros::Subscriber sub = n.subscribe("/camera/rgb/image_raw", 
 		1, &classifier::imageCallback, &visual);
 
 	while (ros::ok()) {
 		
-		if (!visual.imagen.empty())
-    		imshow("view", visual.imagen);
+		if (!visual.imagen.empty()) {
+    		// imshow("view", visual.imagen);
+			
+			img_denoise = visual.deNoise(visual.imagen);
+
+			imgs_mser = visual.MSER_Features(visual.imagen);
+			
+			for (int i = 0; i < imgs_mser.size(); i++) {
+				cv::namedWindow("view2");
+				imshow("view2", imgs_mser[i]);
+			}
+		}
+
 
 		ros::spinOnce();
 	}
-	cv::destroyWindow("view");
+	cv::destroyWindow("view2");
 
 }
