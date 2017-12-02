@@ -80,15 +80,15 @@ int main(int argc, char **argv) {
 			for (int i = 0; i < imgs_mser.size(); i++) {
 				cv::namedWindow("view2");
 				imshow("view2", imgs_mser[i]);
-			}
 
-			// HOG features of detections
-			if (imgs_mser.size() != 0) {
-				testHOG = visual.HOG_Features(hog, imgs_mser);
+				// HOG features of detections
+				if (imgs_mser.size() != 0) {
+					testHOG = visual.HOG_Features(hog, imgs_mser[i]);
 
-				// Evaluate using the SVM
-				
+					// Evaluate using the SVM
 
+
+				}
 			}
 		}
 

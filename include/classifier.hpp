@@ -40,5 +40,5 @@ public:
 
 	std::vector<cv::Mat> MSER_Features(cv::Mat img);
 
-	cv::Mat HOG_Features(cv::HOGDescriptor hog, std::vector<cv::Mat> imgs);
+	cv::Mat HOG_Features(cv::HOGDescriptor hog, cv::Mat img);
 };
