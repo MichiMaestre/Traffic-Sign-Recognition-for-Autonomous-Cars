@@ -33,9 +33,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class classifier {
 public:
 	cv::Mat imagen;
+
 	void imageCallback(const sensor_msgs::ImageConstPtr& msg);
 
 	cv::Mat deNoise(cv::Mat inputImage);
 
 	std::vector<cv::Mat> MSER_Features(cv::Mat img);
+
+	cv::Mat HOG_Features(cv::HOGDescriptor hog, std::vector<cv::Mat> imgs);
 };

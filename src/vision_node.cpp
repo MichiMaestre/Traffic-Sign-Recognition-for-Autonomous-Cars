@@ -38,32 +38,57 @@ int main(int argc, char **argv) {
 	ros::init(argc, argv, "classification");
 	ros::NodeHandle n;
 
-	// Define the classifier object
+	// Define the classifier object and HOG object
 	classifier visual;
+
+	cv::HOGDescriptor hog(cv::Size(64, 64), 
+					  cv::Size(32,32), 
+					  cv::Size(16,16), 
+					  cv::Size(32,32), 
+					  9, 1,-1, 0, 0.2, 
+					  1, 64, 1);
 
 	// Initializations
 	cv::Mat img_denoise;
 	std::vector<cv::Mat> imgs_mser;
+	cv::Mat trainHOG;
+	cv::Mat testHOG;
 
 
-	// cv::namedWindow("view");
-	cv::startWindowThread();
-
+	// Image Subscriber
 	ros::Subscriber sub = n.subscribe("/camera/rgb/image_raw", 
 		1, &classifier::imageCallback, &visual);
 
-	while (ros::ok()) {
-		
-		if (!visual.imagen.empty()) {
-    		// imshow("view", visual.imagen);
-			
-			img_denoise = visual.deNoise(visual.imagen);
+	// Training of the SVM
+	// Load training data and resize
 
+	// HOG features of training images
+
+	// Convert HOG features vector to Matrix
+
+	// Train SVM and save model
+
+
+	// Main Algorithm for classification
+	while (ros::ok()) {
+		if (!visual.imagen.empty()) {
+			
+			// Get the detections
+			img_denoise = visual.deNoise(visual.imagen);
 			imgs_mser = visual.MSER_Features(visual.imagen);
 			
 			for (int i = 0; i < imgs_mser.size(); i++) {
 				cv::namedWindow("view2");
 				imshow("view2", imgs_mser[i]);
+			}
+
+			// HOG features of detections
+			if (imgs_mser.size() != 0) {
+				testHOG = visual.HOG_Features(hog, imgs_mser);
+
+				// Evaluate using the SVM
+				
+
 			}
 		}
 

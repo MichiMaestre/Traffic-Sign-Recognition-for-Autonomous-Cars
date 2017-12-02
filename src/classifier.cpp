@@ -100,3 +100,24 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img) {
 
 	return detections;
 }
+
+cv::Mat classifier::HOG_Features(cv::HOGDescriptor hog, std::vector<cv::Mat> imgs) {
+	std::vector<std::vector<float> > HOG;
+
+	for (int i = 0; i < imgs.size(); i++) {
+		std::vector<float> descriptor;
+		hog.compute(imgs[i], descriptor);
+		HOG.push_back(descriptor);
+	}
+
+	// Convert HOG features vector to Matrix
+	cv::Mat signMat(HOG.size(), HOG[0].size(), CV_32FC1);
+	for (int i = 0; i < HOG.size(); i++) {
+		for (int j = 0; j < HOG[0].size(); j++) {
+			signMat.at<float>(i,j) = HOG[i][j]; 
+		}
+	}
+
+	return signMat;
+}
+
