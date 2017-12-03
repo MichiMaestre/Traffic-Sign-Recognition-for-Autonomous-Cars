@@ -72,26 +72,26 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img) {
 
 	max(red, blue, red_blue);
 
-	// threshold(red_blue, rb_binary, 200, 255, cv::THRESH_BINARY);
+	threshold(red_blue, rb_binary, 200, 255, cv::THRESH_BINARY);
 
 	// MSER
-	cv::Ptr<cv::MSER> ms = cv::MSER::create(8, 1000, 14400, 0.2, 0.7, 200, 1.01, 0.003, 5);
+	cv::Ptr<cv::MSER> ms = cv::MSER::create(50, 1000, 14400, 0.9, 0.1, 200, 1.01, 0.1, 1);
 	std::vector<std::vector<cv::Point> > regions;
 	std::vector<cv::Rect> mser_bbox;
-	ms->detectRegions(red_blue, regions, mser_bbox);
+	ms->detectRegions(rb_binary, regions, mser_bbox);
 
 	for (int i = 0; i < regions.size(); i++) {
 		// Ratio filter of detected regions
 		double ratio = static_cast<double>(mser_bbox[i].height) / static_cast<double>(mser_bbox[i].width);
 
-		if (ratio > 0.8 && ratio < 1.2) {
+		if (ratio > 0.9 && ratio < 1.1) {
+			// Crop bounding boxes to get new images
+        	detection = img(mser_bbox[i]);
+
         	rectangle(img, mser_bbox[i], CV_RGB(255, 0, 0));
 
         	cv::namedWindow("view2");
 			imshow("view2", img);
-
-        	// Crop bounding boxes to get new images
-        	detection = img(mser_bbox[i]);
 
         	// Resize images  to fit the trained data
         	cv::resize(detection, detection, size);
@@ -100,7 +100,6 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img) {
         	detections.push_back(detection);
 		}
     }
-
 	return detections;
 }
 
@@ -189,7 +188,7 @@ void classifier::SVMTraining(cv::Ptr<cv::ml::SVM> &svm, cv::Mat trainHOG, std::v
 	svm->train(td);
 }
 
-void classifier::SVMTesting(cv::Ptr<cv::ml::SVM> &svm, cv::Mat testHOG) {
+float classifier::SVMTesting(cv::Ptr<cv::ml::SVM> &svm, cv::Mat testHOG) {
 	cv::Mat answer;
 
 	svm->predict(testHOG, answer);
@@ -197,5 +196,6 @@ void classifier::SVMTesting(cv::Ptr<cv::ml::SVM> &svm, cv::Mat testHOG) {
 	std::cout << answer.rows << std::endl;
 	for(int i = 0; i < answer.rows; i++) {
 		std::cout << "Label: " << answer.at<float>(i,0) << std::endl;
+		return answer.at<float>(i,0);
 	}
 }

@@ -57,6 +57,7 @@ int main(int argc, char **argv) {
 	cv::Mat img_denoise;
 	std::vector<cv::Mat> imgs_mser;
 	cv::Mat testHOG;
+	float traffic_sign;
 
 
 	// Image Subscriber
@@ -83,11 +84,6 @@ int main(int argc, char **argv) {
 			// Get the detections
 			img_denoise = visual.deNoise(visual.imagen);
 			imgs_mser = visual.MSER_Features(visual.imagen);
-			
-			// for (int i = 0; i < imgs_mser.size(); i++) {
-			// 	cv::namedWindow("view2");
-			// 	imshow("view2", imgs_mser[i]);
-			// }
 
 			// HOG features of detections
 			// std::cout << imgs_mser.size() << std::endl;
@@ -95,12 +91,7 @@ int main(int argc, char **argv) {
 				testHOG = visual.HOG_Features(hog, imgs_mser);
 
 				// Evaluate using the SVM
-				visual.SVMTesting(svm, testHOG);
-
-				// svm->predict(testHOG, testResponse);
-				// for(int i=0;i<testResponse.rows;i++) {
-			 //        std::cout << "Label: " << testResponse.at<float>(i,0) << std::endl;
-			 //    }
+				traffic_sign = visual.SVMTesting(svm, testHOG);
 			}
 		}
 
