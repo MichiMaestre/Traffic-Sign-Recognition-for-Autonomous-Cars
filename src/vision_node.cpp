@@ -49,9 +49,12 @@ int main(int argc, char **argv) {
 					  1, 64, 1);
 
 	// Initializations
+	std::vector<cv::Mat> trainImgs;
+	std::vector<int> trainLabels;
+	std::vector<cv::Mat> trainHOG;
+
 	cv::Mat img_denoise;
 	std::vector<cv::Mat> imgs_mser;
-	cv::Mat trainHOG;
 	cv::Mat testHOG;
 
 
@@ -59,17 +62,21 @@ int main(int argc, char **argv) {
 	ros::Subscriber sub = n.subscribe("/camera/rgb/image_raw", 
 		1, &classifier::imageCallback, &visual);
 
-	// Training of the SVM
+
+	///////// TRAINING ////////////
 	// Load training data and resize
+	visual.loadTrainingImgs(trainImgs, trainLabels);
 
 	// HOG features of training images
-
-	// Convert HOG features vector to Matrix
+	for (int i = 0; i < trainImgs.size(); i++) {
+		trainHOG.push_back(visual.HOG_Features(hog, trainImgs[i]));
+	}
+	std::cout << trainHOG.size() << std::endl;
 
 	// Train SVM and save model
 
 
-	// Main Algorithm for classification
+	//////// CLASSIFICATION /////////
 	while (ros::ok()) {
 		if (!visual.imagen.empty()) {
 			

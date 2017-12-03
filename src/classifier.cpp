@@ -85,7 +85,7 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img) {
 		double ratio = static_cast<double>(mser_bbox[i].height) / static_cast<double>(mser_bbox[i].width);
 
 		if (ratio > 0.8 && ratio < 1.2) {
-        	rectangle(img, mser_bbox[i], CV_RGB(255, 0, 0));
+        	// rectangle(img, mser_bbox[i], CV_RGB(255, 0, 0));
 
         	// Crop bounding boxes to get new images
         	detection = img(mser_bbox[i]);
@@ -110,7 +110,7 @@ cv::Mat classifier::HOG_Features(cv::HOGDescriptor hog, cv::Mat img) {
 
 	// Convert HOG features vector to Matrix
 	cv::Mat signMat(HOG.size(), HOG[0].size(), CV_32FC1);
-	std::cout << signMat.size() << std::endl;
+	// std::cout << signMat.size() << std::endl;
 	for (int i = 0; i < HOG.size(); i++) {
 		for (int j = 0; j < HOG[0].size(); j++) {
 			signMat.at<float>(i,j) = HOG[i][j]; 
@@ -120,3 +120,21 @@ cv::Mat classifier::HOG_Features(cv::HOGDescriptor hog, cv::Mat img) {
 	return signMat;
 }
 
+void classifier::loadTrainingImgs(std::vector<cv::Mat> &trainImgs, std::vector<int> &trainLabels) {
+
+	cv::String pathname = "/home/michi/catkin_ws/src/traffic_sign_recognition/Training_Images/1";
+	// cv::String pathname = "../../../src\\traffic_sign_recognition\\Training_Images\\1";
+	std::vector<cv::String> filenames;
+	cv::glob(pathname, filenames);
+	cv::Size size(64, 64);
+
+	// std::cout << filenames.size() << std::endl;
+	for (int i = 0; i < filenames.size(); i++) {
+		cv::Mat src = imread(filenames[i]);
+
+		cv::resize(src, src, size);
+		
+		trainImgs.push_back(src);
+		trainLabels.push_back(1);
+	}
+}
