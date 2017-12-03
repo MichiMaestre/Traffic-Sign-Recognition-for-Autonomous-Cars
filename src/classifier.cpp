@@ -101,12 +101,17 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img) {
 	return detections;
 }
 
-cv::Mat classifier::HOG_Features(cv::HOGDescriptor hog, cv::Mat img) {
+cv::Mat classifier::HOG_Features(cv::HOGDescriptor hog, std::vector<cv::Mat> imgs) {
+
+	// CHANGE TO IMGS INSTEAD OF SINGLE IMG
+	// TRAINHOG MAT SHOULD HAVE ALL THE INFORMATION
 	std::vector<std::vector<float> > HOG;
 
-	std::vector<float> descriptor;
-	hog.compute(img, descriptor);
-	HOG.push_back(descriptor);
+	for (int i = 0; i < imgs.size(); i++) {
+		std::vector<float> descriptor;
+		hog.compute(imgs[i], descriptor);
+		HOG.push_back(descriptor);
+	}
 
 	// Convert HOG features vector to Matrix
 	cv::Mat signMat(HOG.size(), HOG[0].size(), CV_32FC1);
@@ -137,4 +142,14 @@ void classifier::loadTrainingImgs(std::vector<cv::Mat> &trainImgs, std::vector<i
 		trainImgs.push_back(src);
 		trainLabels.push_back(1);
 	}
+}
+
+void classifier::SVMTraining(cv::Ptr<cv::ml::SVM> &svm, cv::Mat trainHOG, std::vector<int> trainLabels) {
+	// Set parameters
+	svm->setGamma(0.50625);
+	svm->setC(12.5);
+	svm->setKernel(cv::ml::SVM::RBF);
+	svm->setType(cv::ml::SVM::C_SVC);
+	cv::Ptr<cv::ml::TrainData> td = cv::ml::TrainData::create(trainHOG, cv::ml::ROW_SAMPLE, trainLabels);
+	svm->train(td);
 }

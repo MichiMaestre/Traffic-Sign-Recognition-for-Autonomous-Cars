@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
 	ros::init(argc, argv, "classification");
 	ros::NodeHandle n;
 
-	// Define the classifier object and HOG object
+	// Initializations
 	classifier visual;
 
 	cv::HOGDescriptor hog(cv::Size(64, 64), 
@@ -48,10 +48,11 @@ int main(int argc, char **argv) {
 					  9, 1,-1, 0, 0.2, 
 					  1, 64, 1);
 
-	// Initializations
 	std::vector<cv::Mat> trainImgs;
 	std::vector<int> trainLabels;
-	std::vector<cv::Mat> trainHOG;
+	cv::Mat trainHOG;
+
+	cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
 
 	cv::Mat img_denoise;
 	std::vector<cv::Mat> imgs_mser;
@@ -68,12 +69,10 @@ int main(int argc, char **argv) {
 	visual.loadTrainingImgs(trainImgs, trainLabels);
 
 	// HOG features of training images
-	for (int i = 0; i < trainImgs.size(); i++) {
-		trainHOG.push_back(visual.HOG_Features(hog, trainImgs[i]));
-	}
-	std::cout << trainHOG.size() << std::endl;
+	trainHOG = visual.HOG_Features(hog, trainImgs);
 
 	// Train SVM and save model
+	visual.SVMTraining(svm, trainHOG, trainLabels);
 
 
 	//////// CLASSIFICATION /////////
@@ -98,7 +97,6 @@ int main(int argc, char **argv) {
 				}
 			}
 		}
-
 
 		ros::spinOnce();
 	}

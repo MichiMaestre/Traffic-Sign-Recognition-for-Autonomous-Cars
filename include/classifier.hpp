@@ -40,7 +40,9 @@ public:
 
 	std::vector<cv::Mat> MSER_Features(cv::Mat img);
 
-	cv::Mat HOG_Features(cv::HOGDescriptor hog, cv::Mat img);
+	cv::Mat HOG_Features(cv::HOGDescriptor hog, std::vector<cv::Mat> imgs);
 
 	void loadTrainingImgs(std::vector<cv::Mat> &trainImgs, std::vector<int> &trainLabels);
+
+	void SVMTraining(cv::Ptr<cv::ml::SVM> &svm, cv::Mat trainHOG, std::vector<int> trainLabels);
 };
