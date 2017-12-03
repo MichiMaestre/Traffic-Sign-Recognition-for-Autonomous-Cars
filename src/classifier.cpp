@@ -85,7 +85,10 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img) {
 		double ratio = static_cast<double>(mser_bbox[i].height) / static_cast<double>(mser_bbox[i].width);
 
 		if (ratio > 0.8 && ratio < 1.2) {
-        	// rectangle(img, mser_bbox[i], CV_RGB(255, 0, 0));
+        	rectangle(img, mser_bbox[i], CV_RGB(255, 0, 0));
+
+        	cv::namedWindow("view2");
+			imshow("view2", img);
 
         	// Crop bounding boxes to get new images
         	detection = img(mser_bbox[i]);
@@ -142,6 +145,38 @@ void classifier::loadTrainingImgs(std::vector<cv::Mat> &trainImgs, std::vector<i
 		trainImgs.push_back(src);
 		trainLabels.push_back(1);
 	}
+
+	cv::String pathname2 = "/home/michi/catkin_ws/src/traffic_sign_recognition/Training_Images/2";
+	// cv::String pathname = "../../../src\\traffic_sign_recognition\\Training_Images\\1";
+	std::vector<cv::String> filenames2;
+	cv::glob(pathname2, filenames2);
+	cv::Size size2(64, 64);
+
+	// std::cout << filenames.size() << std::endl;
+	for (int i = 0; i < filenames2.size(); i++) {
+		cv::Mat src2 = imread(filenames2[i]);
+
+		cv::resize(src2, src2, size2);
+		
+		trainImgs.push_back(src2);
+		trainLabels.push_back(2);
+	}
+
+	cv::String pathname3 = "/home/michi/catkin_ws/src/traffic_sign_recognition/Training_Images/3";
+	// cv::String pathname = "../../../src\\traffic_sign_recognition\\Training_Images\\1";
+	std::vector<cv::String> filenames3;
+	cv::glob(pathname3, filenames3);
+	cv::Size size3(64, 64);
+
+	// std::cout << filenames.size() << std::endl;
+	for (int i = 0; i < filenames3.size(); i++) {
+		cv::Mat src3 = imread(filenames3[i]);
+
+		cv::resize(src3, src3, size3);
+		
+		trainImgs.push_back(src3);
+		trainLabels.push_back(3);
+	}
 }
 
 void classifier::SVMTraining(cv::Ptr<cv::ml::SVM> &svm, cv::Mat trainHOG, std::vector<int> trainLabels) {
@@ -152,4 +187,15 @@ void classifier::SVMTraining(cv::Ptr<cv::ml::SVM> &svm, cv::Mat trainHOG, std::v
 	svm->setType(cv::ml::SVM::C_SVC);
 	cv::Ptr<cv::ml::TrainData> td = cv::ml::TrainData::create(trainHOG, cv::ml::ROW_SAMPLE, trainLabels);
 	svm->train(td);
+}
+
+void classifier::SVMTesting(cv::Ptr<cv::ml::SVM> &svm, cv::Mat testHOG) {
+	cv::Mat answer;
+
+	svm->predict(testHOG, answer);
+
+	std::cout << answer.rows << std::endl;
+	for(int i = 0; i < answer.rows; i++) {
+		std::cout << "Label: " << answer.at<float>(i,0) << std::endl;
+	}
 }

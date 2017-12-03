@@ -45,4 +45,6 @@ public:
 	void loadTrainingImgs(std::vector<cv::Mat> &trainImgs, std::vector<int> &trainLabels);
 
 	void SVMTraining(cv::Ptr<cv::ml::SVM> &svm, cv::Mat trainHOG, std::vector<int> trainLabels);
+
+	void SVMTesting(cv::Ptr<cv::ml::SVM> &svm, cv::Mat testHOG);
 };
