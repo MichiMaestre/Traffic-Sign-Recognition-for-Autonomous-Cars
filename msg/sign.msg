@@ -1,1 +1,1 @@
-string sign_type
+float32 sign_type

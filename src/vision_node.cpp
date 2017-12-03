@@ -31,6 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ros/ros.h"
 #include "ros/console.h"
 #include "classifier.hpp"
+#include "std_msgs/Float32.h"
 
 
 int main(int argc, char **argv) {
@@ -64,6 +65,9 @@ int main(int argc, char **argv) {
 	ros::Subscriber sub = n.subscribe("/camera/rgb/image_raw", 
 		1, &classifier::imageCallback, &visual);
 
+	// Msg Publisher
+	ros::Publisher signPub = n.advertise<std_msgs::Float32>("traffic", 1);
+	std_msgs::Float32 msg;
 
 	///////// TRAINING ////////////
 	// Load training data and resize
@@ -86,15 +90,17 @@ int main(int argc, char **argv) {
 			imgs_mser = visual.MSER_Features(visual.imagen);
 
 			// HOG features of detections
-			// std::cout << imgs_mser.size() << std::endl;
 			if (imgs_mser.size() != 0) {
 				testHOG = visual.HOG_Features(hog, imgs_mser);
 
 				// Evaluate using the SVM
 				traffic_sign = visual.SVMTesting(svm, testHOG);
+
+				// Publish the type of sign through message
+				msg.data = traffic_sign;
+				signPub.publish(msg);
 			}
 		}
-
 		ros::spinOnce();
 	}
 	cv::destroyWindow("view2");
