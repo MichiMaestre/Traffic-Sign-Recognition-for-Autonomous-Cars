@@ -28,3 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "robot.hpp"
 #include "traffic_sign_recognition/sign.h"
 
+void robot::signCallback(traffic_sign_recognition::sign msg) {
+	type = msg.sign_type;
+	area = msg.area;
+}

@@ -45,7 +45,14 @@ int main(int argc, char **argv) {
 	ros::Subscriber sub = n.subscribe("/traffic", 
 		1, &robot::signCallback, &turtle);
 
-	
+	while (ros::ok()) {
+		if (turtle.type != 0) {
+
+			std::cout << "Sign: " << turtle.type << std::endl;
+			std::cout << "Area: " << turtle.area << std::endl;
+		}
+		ros::spinOnce();
+	}
 
 }
 
