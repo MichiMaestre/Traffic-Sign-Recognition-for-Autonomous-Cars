@@ -22,3 +22,7 @@ add_executable(vision src/vision_node.cpp src/classifier.cpp)
 target_link_libraries(vision ${catkin_LIBRARIES} ${OpenCV_LIBS})
 add_dependencies(vision traffic_sign_recognition_generate_messages_cpp)
 
+add_executable(robot src/navig_node.cpp src/robot.cpp)
+target_link_libraries(robot ${catkin_LIBRARIES})
+add_dependencies(robot traffic_sign_recognition_generate_messages_cpp)
+

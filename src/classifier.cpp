@@ -52,7 +52,7 @@ cv::Mat classifier::deNoise(cv::Mat inputImage) {
   	return output;
 }
 
-std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img) {
+std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img, double &area) {
 	cv::Mat bgr[3];
 	cv::Mat red_blue;
 	cv::Mat rb_binary;
@@ -89,6 +89,9 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img) {
         	detection = img(mser_bbox[i]);
 
         	rectangle(img, mser_bbox[i], CV_RGB(255, 0, 0));
+
+        	area = static_cast<double>(mser_bbox[i].height) * static_cast<double>(mser_bbox[i].width);
+        	// std::cout << area << std::endl;
 
         	cv::namedWindow("view2");
 			imshow("view2", img);
@@ -195,7 +198,7 @@ float classifier::SVMTesting(cv::Ptr<cv::ml::SVM> &svm, cv::Mat testHOG) {
 
 	std::cout << answer.rows << std::endl;
 	for(int i = 0; i < answer.rows; i++) {
-		std::cout << "Label: " << answer.at<float>(i,0) << std::endl;
+		// std::cout << "Label: " << answer.at<float>(i,0) << std::endl;
 		return answer.at<float>(i,0);
 	}
 }

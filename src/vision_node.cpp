@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ros/ros.h"
 #include "ros/console.h"
 #include "classifier.hpp"
-#include "std_msgs/Float32.h"
+#include "traffic_sign_recognition/sign.h"
 
 
 int main(int argc, char **argv) {
@@ -54,6 +54,7 @@ int main(int argc, char **argv) {
 	cv::Mat trainHOG;
 
 	cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
+	double area;
 
 	cv::Mat img_denoise;
 	std::vector<cv::Mat> imgs_mser;
@@ -66,8 +67,8 @@ int main(int argc, char **argv) {
 		1, &classifier::imageCallback, &visual);
 
 	// Msg Publisher
-	ros::Publisher signPub = n.advertise<std_msgs::Float32>("traffic", 1);
-	std_msgs::Float32 msg;
+	ros::Publisher signPub = n.advertise<traffic_sign_recognition::sign>("traffic", 1);
+	traffic_sign_recognition::sign msg;
 
 	///////// TRAINING ////////////
 	// Load training data and resize
@@ -87,7 +88,9 @@ int main(int argc, char **argv) {
 			
 			// Get the detections
 			img_denoise = visual.deNoise(visual.imagen);
-			imgs_mser = visual.MSER_Features(visual.imagen);
+			imgs_mser = visual.MSER_Features(visual.imagen, area);
+			msg.area = area;
+			std::cout << area << std::endl;
 
 			// HOG features of detections
 			if (imgs_mser.size() != 0) {
@@ -95,9 +98,10 @@ int main(int argc, char **argv) {
 
 				// Evaluate using the SVM
 				traffic_sign = visual.SVMTesting(svm, testHOG);
+				std::cout << "Label: " << traffic_sign << std::endl;
 
 				// Publish the type of sign through message
-				msg.data = traffic_sign;
+				msg.sign_type = traffic_sign;
 				signPub.publish(msg);
 			}
 		}

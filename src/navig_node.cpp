@@ -21,3 +21,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@author Miguel Maestre Trueba
  *@brief Navigation node
  */
+
+#include <cstdlib>
+#include <string>
+// #include <image_transport/image_transport.h>
+#include <opencv2/highgui/highgui.hpp>
+#include <cv_bridge/cv_bridge.h>
+#include "opencv2/opencv.hpp"
+#include "ros/ros.h"
+#include "ros/console.h"
+#include "robot.hpp"
+#include "traffic_sign_recognition/sign.h"
+
+int main(int argc, char **argv) {
+	// Node creation
+	ros::init(argc, argv, "robot_move");
+	ros::NodeHandle n;
+
+	// Initializations
+	robot turtle;
+
+	// Subscriber
+	ros::Subscriber sub = n.subscribe("/traffic", 
+		1, &robot::signCallback, &turtle);
+
+	
+
+}
+

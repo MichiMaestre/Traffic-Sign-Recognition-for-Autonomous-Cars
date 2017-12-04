@@ -38,7 +38,7 @@ public:
 
 	cv::Mat deNoise(cv::Mat inputImage);
 
-	std::vector<cv::Mat> MSER_Features(cv::Mat img);
+	std::vector<cv::Mat> MSER_Features(cv::Mat img, double &area);
 
 	cv::Mat HOG_Features(cv::HOGDescriptor hog, std::vector<cv::Mat> imgs);
 

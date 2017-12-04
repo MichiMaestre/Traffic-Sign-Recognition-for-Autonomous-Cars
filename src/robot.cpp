@@ -21,3 +21,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@author Miguel Maestre Trueba
  *@brief Class robot definition code
  */
+
+#include <geometry_msgs/Twist.h>
+#include <vector>
+#include "ros/ros.h"
+#include "robot.hpp"
+#include "traffic_sign_recognition/sign.h"
+

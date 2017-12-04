@@ -21,3 +21,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@author Miguel Maestre Trueba
  *@brief Header file for class robot
  */
+
+#pragma once
+
+#include <geometry_msgs/Twist.h>
+#include <vector>
+#include "ros/ros.h"
+#include "traffic_sign_recognition/sign.h"
+
+class robot {
+public:
+	float type;
+	double area;
+
+	void signCallback(traffic_sign_recognition::sign msg);
+};
