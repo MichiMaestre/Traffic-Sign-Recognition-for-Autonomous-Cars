@@ -25,10 +25,39 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <geometry_msgs/Twist.h>
 #include <vector>
 #include "ros/ros.h"
+#include "ros/console.h"
 #include "robot.hpp"
 #include "traffic_sign_recognition/sign.h"
 
 void robot::signCallback(traffic_sign_recognition::sign msg) {
 	type = msg.sign_type;
 	area = msg.area;
+	if (area > 5200 && area < 7000) {
+		area = 0;
+		flag = true;
+	}
+	else
+		flag = false;
+
+	if (flag)
+		count++;
+	// std::cout << flag << std::endl;
+}
+
+void robot::command(float type, double area, geometry_msgs::Twist &velocity){
+
+	// FORWARD SIGN //
+	if (type == 1) {
+
+		// ros::Time start = ros::Time::now();
+		// while (ros::Time::now() - start < ros::Duration(5.0)) {
+			velocity.linear.x = 0.2;
+            velocity.angular.z = 0.0;
+		// }
+		// ros::Duration(2).sleep();
+	}
+	// else {
+	// 	velocity.linear.x = 0.1;
+ //        velocity.angular.z = 0.0;
+	// }
 }

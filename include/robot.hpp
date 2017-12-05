@@ -31,8 +31,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class robot {
 public:
+	bool flag;
 	float type;
 	double area;
+	int count;
 
 	void signCallback(traffic_sign_recognition::sign msg);
+
+	void command(float type, double area, geometry_msgs::Twist &velocity);
 };

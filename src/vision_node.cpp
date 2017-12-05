@@ -89,7 +89,7 @@ int main(int argc, char **argv) {
 			// Get the detections
 			img_denoise = visual.deNoise(visual.imagen);
 			imgs_mser = visual.MSER_Features(visual.imagen, area);
-			msg.area = area;
+			// msg.area = area;
 			std::cout << area << std::endl;
 
 			// HOG features of detections
@@ -101,6 +101,7 @@ int main(int argc, char **argv) {
 				std::cout << "Label: " << traffic_sign << std::endl;
 
 				// Publish the type of sign through message
+				msg.area = area;
 				msg.sign_type = traffic_sign;
 				signPub.publish(msg);
 			}

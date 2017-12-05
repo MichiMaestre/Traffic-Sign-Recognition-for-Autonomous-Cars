@@ -102,6 +102,8 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img, double &area) {
         	// Output the vector of images
         	detections.push_back(detection);
 		}
+		else
+			area = 0;
     }
 	return detections;
 }
