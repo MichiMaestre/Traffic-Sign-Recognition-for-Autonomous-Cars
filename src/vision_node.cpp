@@ -48,12 +48,14 @@ int main(int argc, char **argv) {
 					  cv::Size(32,32), 
 					  9, 1,-1, 0, 0.2, 
 					  1, 64, 1);
+	ROS_INFO_STREAM("HOG Descriptor created");
 
 	std::vector<cv::Mat> trainImgs;
 	std::vector<int> trainLabels;
 	cv::Mat trainHOG;
 
 	cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
+	ROS_INFO_STREAM("Support Vector Machine Created");
 	double area;
 
 	cv::Mat img_denoise;
@@ -71,17 +73,22 @@ int main(int argc, char **argv) {
 	traffic_sign_recognition::sign msg;
 
 	///////// TRAINING ////////////
-	// Load training data and resize
-	visual.loadTrainingImgs(trainImgs, trainLabels);
+	// ROS_INFO_STREAM("SVM Training Stage started...");
+	// // Load training data and resize
+	// visual.loadTrainingImgs(trainImgs, trainLabels);
 
-	// HOG features of training images
-	trainHOG = visual.HOG_Features(hog, trainImgs);
+	// // HOG features of training images
+	// trainHOG = visual.HOG_Features(hog, trainImgs);
 
-	// Train SVM and save model
-	visual.SVMTraining(svm, trainHOG, trainLabels);
+	// // Train SVM and save model
+	// visual.SVMTraining(svm, trainHOG, trainLabels);
+	// ROS_INFO_STREAM("SVM Training Stage completed");
+	// ros::Duration(2).sleep();
 
+	visual.trainStage(hog, svm, trainImgs, trainLabels);
 
 	//////// CLASSIFICATION /////////
+	ROS_INFO_STREAM("Detection and Classification started...");
 	// cv::Mat testResponse;
 	while (ros::ok()) {
 		if (!visual.imagen.empty()) {
@@ -90,7 +97,7 @@ int main(int argc, char **argv) {
 			img_denoise = visual.deNoise(visual.imagen);
 			imgs_mser = visual.MSER_Features(visual.imagen, area);
 			// msg.area = area;
-			std::cout << area << std::endl;
+			// std::cout << area << std::endl;
 
 			// HOG features of detections
 			if (imgs_mser.size() != 0) {
@@ -99,6 +106,7 @@ int main(int argc, char **argv) {
 				// Evaluate using the SVM
 				traffic_sign = visual.SVMTesting(svm, testHOG);
 				std::cout << "Label: " << traffic_sign << std::endl;
+				// ROS_INFO_STREAM("Label: %f", traffic_sign);
 
 				// Publish the type of sign through message
 				msg.area = area;

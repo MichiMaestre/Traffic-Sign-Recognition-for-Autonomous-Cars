@@ -51,101 +51,12 @@ int main(int argc, char **argv) {
         ("/cmd_vel_mux/input/teleop", 1000);
 
     ros::Rate loop_rate(10);
-    turtle.flag = false;
-    turtle.count = 0;
 	while (ros::ok()) {
 		if (turtle.flag == false)
 			ros::spinOnce();
 
-		std::cout << "Count: " << turtle.count << std::endl;
-
-		if (turtle.flag == true) {
-			
-			// Publish velocity depending on type of sign
-			// turtle.command(turtle.type, turtle.area, velocity);
-
-
-			//////// FORWARD //////
-			if (turtle.type == 1) {
-
-				ROS_INFO_STREAM("FORWARD SIGN");
-				ros::Time start = ros::Time::now();
-				while (ros::Time::now() - start < ros::Duration(10.0)) {
-					velocity.linear.x = 0.2;
-            		velocity.angular.z = 0.0;
-            		// std::cout << velocity.linear.x << std::endl;
-            		pub.publish(velocity);
-            		loop_rate.sleep();
-            	}
-            	start = ros::Time::now();
-				while (ros::Time::now() - start < ros::Duration(3.0)) {
-					velocity.linear.x = 0.0;
-            		velocity.angular.z = 0.0;
-            		// std::cout << velocity.linear.x << std::endl;
-            		pub.publish(velocity);
-            		loop_rate.sleep();
-            	}
-            	turtle.type = 0;
-            	turtle.area = 0;
-            	turtle.flag = false;
-			}
-
-
-			///////// TURN ////////
-			if (turtle.type == 2) {
-
-				ROS_INFO_STREAM("TURN SIGN");
-				ros::Time start = ros::Time::now();
-				while (ros::Time::now() - start < ros::Duration(10.0)) {
-					velocity.linear.x = 0.2;
-            		velocity.angular.z = 0.0;
-            		// std::cout << velocity.linear.x << std::endl;
-            		pub.publish(velocity);
-            		loop_rate.sleep();
-            	}
-            	start = ros::Time::now();
-				while (ros::Time::now() - start < ros::Duration(3.0)) {
-					velocity.linear.x = 0.3;
-            		velocity.angular.z = 0.5;
-            		// std::cout << velocity.linear.x << std::endl;
-            		pub.publish(velocity);
-            		loop_rate.sleep();
-            	}
-            	turtle.type = 0;
-            	turtle.area = 0;
-            	turtle.flag = false;
-			}
-
-			///////// STOP ////////
-			if (turtle.type == 3) {
-
-				ROS_INFO_STREAM("STOP SIGN");
-				ros::Time start = ros::Time::now();
-				while (ros::Time::now() - start < ros::Duration(10.0)) {
-					velocity.linear.x = 0.0;
-            		velocity.angular.z = 0.0;
-            		// std::cout << velocity.linear.x << std::endl;
-            		pub.publish(velocity);
-            		loop_rate.sleep();
-            	}
-            	turtle.type = 0;
-            	turtle.area = 0;
-            	turtle.flag = false;
-
-            	break;
-			}
-
-
-
-		}
-
-		if (turtle.flag == false) {
-			velocity.linear.x = 0.3;
-        	velocity.angular.z = 0.0;
-        	pub.publish(velocity);
-		}
-
-		// std::cout << velocity.linear.x << std::endl;
+		// Publish velocity depending on type of sign
+		turtle.command(velocity, pub, loop_rate);
 
 		loop_rate.sleep();
 

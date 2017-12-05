@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(traffic_sign_recognition)
 
+add_definitions(-std=c++11)
+
 ## Find catkin and any catkin packages
 find_package(catkin REQUIRED COMPONENTS cv_bridge roscpp rospy std_msgs genmsg geometry_msgs)
 find_package(OpenCV REQUIRED)

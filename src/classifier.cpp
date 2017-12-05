@@ -84,7 +84,7 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img, double &area) {
 		// Ratio filter of detected regions
 		double ratio = static_cast<double>(mser_bbox[i].height) / static_cast<double>(mser_bbox[i].width);
 
-		if (ratio > 0.9 && ratio < 1.1) {
+		if (ratio > 0.8 && ratio < 1.2) {
 			// Crop bounding boxes to get new images
         	detection = img(mser_bbox[i]);
 
@@ -102,8 +102,8 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img, double &area) {
         	// Output the vector of images
         	detections.push_back(detection);
 		}
-		else
-			area = 0;
+		// else
+		// 	area = 0;
     }
 	return detections;
 }
@@ -193,12 +193,26 @@ void classifier::SVMTraining(cv::Ptr<cv::ml::SVM> &svm, cv::Mat trainHOG, std::v
 	svm->train(td);
 }
 
+void classifier::trainStage(cv::HOGDescriptor &hog, cv::Ptr<cv::ml::SVM> &svm, std::vector<cv::Mat> &trainImgs, std::vector<int> &trainLabels) {
+	ROS_INFO_STREAM("SVM Training Stage started...");
+	// Load training data and resize
+	this->loadTrainingImgs(trainImgs, trainLabels);
+
+	// HOG features of training images
+	cv::Mat trainHOG = this->HOG_Features(hog, trainImgs);
+
+	// Train SVM and save model
+	this->SVMTraining(svm, trainHOG, trainLabels);
+	ROS_INFO_STREAM("SVM Training Stage completed");
+	ros::Duration(2).sleep();
+}
+
 float classifier::SVMTesting(cv::Ptr<cv::ml::SVM> &svm, cv::Mat testHOG) {
 	cv::Mat answer;
 
 	svm->predict(testHOG, answer);
 
-	std::cout << answer.rows << std::endl;
+	// std::cout << answer.rows << std::endl;
 	for(int i = 0; i < answer.rows; i++) {
 		// std::cout << "Label: " << answer.at<float>(i,0) << std::endl;
 		return answer.at<float>(i,0);

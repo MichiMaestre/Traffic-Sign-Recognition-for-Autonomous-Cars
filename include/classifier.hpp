@@ -31,6 +31,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ros/ros.h"
 
 class classifier {
+private:
+	void loadTrainingImgs(std::vector<cv::Mat> &trainImgs, std::vector<int> &trainLabels);
+
+	void SVMTraining(cv::Ptr<cv::ml::SVM> &svm, cv::Mat trainHOG, std::vector<int> trainLabels);
+
 public:
 	cv::Mat imagen;
 
@@ -42,9 +47,7 @@ public:
 
 	cv::Mat HOG_Features(cv::HOGDescriptor hog, std::vector<cv::Mat> imgs);
 
-	void loadTrainingImgs(std::vector<cv::Mat> &trainImgs, std::vector<int> &trainLabels);
-
-	void SVMTraining(cv::Ptr<cv::ml::SVM> &svm, cv::Mat trainHOG, std::vector<int> trainLabels);
+	void trainStage(cv::HOGDescriptor &hog, cv::Ptr<cv::ml::SVM> &svm, std::vector<cv::Mat> &trainImgs, std::vector<int> &trainLabels);
 
 	float SVMTesting(cv::Ptr<cv::ml::SVM> &svm, cv::Mat testHOG);
 };

@@ -30,13 +30,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "traffic_sign_recognition/sign.h"
 
 class robot {
-public:
-	bool flag;
+private:
 	float type;
 	double area;
-	int count;
+	int count = 0;
 
+public:
+	bool flag;
 	void signCallback(traffic_sign_recognition::sign msg);
 
-	void command(float type, double area, geometry_msgs::Twist &velocity);
+	void command(geometry_msgs::Twist &velocity, ros::Publisher &pub, ros::Rate &loop_rate);
 };
