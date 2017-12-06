@@ -32,7 +32,7 @@ if(CATKIN_ENABLE_TESTING)
   find_package(rostest REQUIRED)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 --coverage")
 
-  add_rostest_gtest(test_vision test/test_vision.launch test/test_vision.cpp)
+  add_rostest_gtest(test_vision test/test_vision.launch test/test_vision.cpp src/classifier.cpp)
   target_link_libraries(test_vision ${catkin_LIBRARIES} ${OpenCV_LIBS})
   ##add_dependencies(test_vision ${catkin_EXPORTED_TARGETS})
 

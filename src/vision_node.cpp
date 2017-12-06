@@ -50,6 +50,7 @@ int main(int argc, char **argv) {
 					  1, 64, 1);
 	ROS_INFO_STREAM("HOG Descriptor created");
 
+	visual.imagen = cv::Mat::zeros(640, 480, CV_8UC3);
 	std::vector<cv::Mat> trainImgs;
 	std::vector<int> trainLabels;
 	cv::Mat trainHOG;
@@ -59,7 +60,7 @@ int main(int argc, char **argv) {
 	double area;
 
 	cv::Mat img_denoise;
-	std::vector<cv::Mat> imgs_mser;
+	std::vector<cv::Mat> imgs_mser(100);
 	cv::Mat testHOG;
 	float traffic_sign;
 
@@ -89,9 +90,10 @@ int main(int argc, char **argv) {
 
 	//////// CLASSIFICATION /////////
 	ROS_INFO_STREAM("Detection and Classification started...");
-	// cv::Mat testResponse;
 	while (ros::ok()) {
 		if (!visual.imagen.empty()) {
+			cv::namedWindow("view");
+			imshow("view", visual.imagen);
 			
 			// Get the detections
 			img_denoise = visual.deNoise(visual.imagen);
@@ -112,10 +114,12 @@ int main(int argc, char **argv) {
 				msg.area = area;
 				msg.sign_type = traffic_sign;
 				signPub.publish(msg);
+
+				imgs_mser.clear();
 			}
 		}
 		ros::spinOnce();
 	}
-	cv::destroyWindow("view2");
+	// cv::destroyWindow("view2");
 
 }

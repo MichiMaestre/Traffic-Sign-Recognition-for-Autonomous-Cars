@@ -88,13 +88,13 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img, double &area) {
 			// Crop bounding boxes to get new images
         	detection = img(mser_bbox[i]);
 
-        	rectangle(img, mser_bbox[i], CV_RGB(255, 0, 0));
+        	// rectangle(img, mser_bbox[i], CV_RGB(255, 0, 0));
 
         	area = static_cast<double>(mser_bbox[i].height) * static_cast<double>(mser_bbox[i].width);
         	// std::cout << area << std::endl;
 
-        	cv::namedWindow("view2");
-			imshow("view2", img);
+   //      	cv::namedWindow("view2");
+			// imshow("view2", img);
 
         	// Resize images  to fit the trained data
         	cv::resize(detection, detection, size);
