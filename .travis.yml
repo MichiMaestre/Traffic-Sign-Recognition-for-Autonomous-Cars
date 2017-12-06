@@ -4,7 +4,7 @@
 # Author: Felix Duvallet <felixd@gmail.com>
 
 # Use ubuntu xenial (16.04) with sudo privileges.
-dist: xenial
+dist: trusty
 sudo: required
 language:
   - generic
@@ -15,7 +15,7 @@ cache:
 # trigger a build matrix for different ROS distributions if desired.
 env:
   global:
-    - ROS_DISTRO=kinetic
+    - ROS_DISTRO=indigo
     - ROS_CI_DESKTOP="`lsb_release -cs`"  # e.g. [precise|trusty|...]
     - CI_SOURCE_PATH=$(pwd)
     - ROSINSTALL_FILE=$CI_SOURCE_PATH/dependencies.rosinstall
