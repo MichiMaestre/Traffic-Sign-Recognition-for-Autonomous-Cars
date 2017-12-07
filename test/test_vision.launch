@@ -1,6 +1,9 @@
 
 <launch>
 
+<node pkg="traffic_sign_recognition" name="vision" type="vision" >
+</node>
+
 <test test-name="test_vision" pkg="traffic_sign_recognition" type="test_vision" />
 
 </launch>

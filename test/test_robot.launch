@@ -1,0 +1,11 @@
+<launch>
+
+<!-- <node pkg="traffic_sign_recognition" name="vision" type="vision" >
+</node> -->
+
+<node pkg="traffic_sign_recognition" name="robot" type="robot" >
+</node>
+
+<test test-name="test_robot" pkg="traffic_sign_recognition" type="test_robot" />
+
+</launch>

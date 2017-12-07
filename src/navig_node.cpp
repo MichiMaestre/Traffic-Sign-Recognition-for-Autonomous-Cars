@@ -35,7 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 int main(int argc, char **argv) {
 	// Node creation
-	ros::init(argc, argv, "robot_move");
+	ros::init(argc, argv, "robot");
 	ros::NodeHandle n;
 
 	// Initializations

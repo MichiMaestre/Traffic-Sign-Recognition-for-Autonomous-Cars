@@ -60,8 +60,6 @@ float testing_stop() {
 		float traffic_sign = visual.SVMTesting(svm, testHOG);
 		return traffic_sign;
 	}
-	else 
-		return 0;
 }
 
 float testing_turn() {
@@ -93,8 +91,6 @@ float testing_turn() {
 		float traffic_sign = visual.SVMTesting(svm, testHOG);
 		return traffic_sign;
 	}
-	else 
-		return 0;
 }
 
 float testing_forward() {
@@ -126,8 +122,6 @@ float testing_forward() {
 		float traffic_sign = visual.SVMTesting(svm, testHOG);
 		return traffic_sign;
 	}
-	else 
-		return 0;
 }
 
 
