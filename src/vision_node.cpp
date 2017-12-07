@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
 	// ROS_INFO_STREAM("SVM Training Stage completed");
 	// ros::Duration(2).sleep();
 
-	visual.trainStage(hog, svm, trainImgs, trainLabels);
+	int trained = visual.trainStage(hog, svm, trainImgs, trainLabels);
 
 	//////// CLASSIFICATION /////////
 	ROS_INFO_STREAM("Detection and Classification started...");

@@ -47,7 +47,7 @@ public:
 
 	cv::Mat HOG_Features(cv::HOGDescriptor hog, std::vector<cv::Mat> imgs);
 
-	void trainStage(cv::HOGDescriptor &hog, cv::Ptr<cv::ml::SVM> &svm, std::vector<cv::Mat> &trainImgs, std::vector<int> &trainLabels);
+	int trainStage(cv::HOGDescriptor &hog, cv::Ptr<cv::ml::SVM> &svm, std::vector<cv::Mat> &trainImgs, std::vector<int> &trainLabels);
 
 	float SVMTesting(cv::Ptr<cv::ml::SVM> &svm, cv::Mat testHOG);
 };

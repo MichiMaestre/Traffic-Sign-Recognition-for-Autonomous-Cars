@@ -193,7 +193,7 @@ void classifier::SVMTraining(cv::Ptr<cv::ml::SVM> &svm, cv::Mat trainHOG, std::v
 	svm->train(td);
 }
 
-void classifier::trainStage(cv::HOGDescriptor &hog, cv::Ptr<cv::ml::SVM> &svm, std::vector<cv::Mat> &trainImgs, std::vector<int> &trainLabels) {
+int classifier::trainStage(cv::HOGDescriptor &hog, cv::Ptr<cv::ml::SVM> &svm, std::vector<cv::Mat> &trainImgs, std::vector<int> &trainLabels) {
 	ROS_INFO_STREAM("SVM Training Stage started...");
 	// Load training data and resize
 	this->loadTrainingImgs(trainImgs, trainLabels);
@@ -205,6 +205,9 @@ void classifier::trainStage(cv::HOGDescriptor &hog, cv::Ptr<cv::ml::SVM> &svm, s
 	this->SVMTraining(svm, trainHOG, trainLabels);
 	ROS_INFO_STREAM("SVM Training Stage completed");
 	ros::Duration(2).sleep();
+
+	// Return 1 as success 
+	return 1;
 }
 
 float classifier::SVMTesting(cv::Ptr<cv::ml::SVM> &svm, cv::Mat testHOG) {

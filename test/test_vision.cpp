@@ -125,6 +125,71 @@ float testing_forward() {
 }
 
 
+// Training Testing
+int test_training() {
+	// Initializations
+	classifier visual;
+
+	cv::HOGDescriptor hog(cv::Size(64, 64), 
+					  cv::Size(32,32), 
+					  cv::Size(16,16), 
+					  cv::Size(32,32), 
+					  9, 1,-1, 0, 0.2, 
+					  1, 64, 1);
+	cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
+	std::vector<cv::Mat> trainImgs;
+	std::vector<int> trainLabels;
+
+	int trainedSVM = visual.trainStage(hog, svm, trainImgs, trainLabels);
+
+	return trainedSVM;
+}
+
+// MSER Testing
+std::vector<cv::Mat> test_MSERGood() {
+	classifier visual;
+
+	cv::Mat img = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/forward.png");
+	double area;
+	std::vector<cv::Mat> img_mser = visual.MSER_Features(img, area);
+
+	return img_mser;
+}
+
+std::vector<cv::Mat> test_MSERBad() {
+	classifier visual;
+
+	cv::Mat img = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/ratio_bad.png");
+	double area;
+	std::vector<cv::Mat> img_mser = visual.MSER_Features(img, area);
+
+	return img_mser;
+}
+
+cv::Mat test_HOG() {
+	classifier visual;
+
+	cv::HOGDescriptor hog(cv::Size(64, 64), 
+					  cv::Size(32,32), 
+					  cv::Size(16,16), 
+					  cv::Size(32,32), 
+					  9, 1,-1, 0, 0.2, 
+					  1, 64, 1);
+
+	std::vector<cv::Mat> imgs;
+	cv::Mat img1 = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/forward.png");
+	cv::resize(img1, img1, cv::Size(64, 64));
+	imgs.push_back(img1);
+	
+	cv::Mat img2 = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/turn.png");
+	cv::resize(img2, img2, cv::Size(64, 64));
+	imgs.push_back(img2);
+
+	cv::Mat HOG = visual.HOG_Features(hog, imgs);
+
+	return HOG;
+}
+
 TEST(TestSigns, stopTest) {
 	float type = testing_stop();
    
@@ -141,6 +206,29 @@ TEST(TestSigns, forwardTest) {
 	float type = testing_forward();
    
     EXPECT_EQ(1, type);
+}
+
+TEST(TestSVM, trainingTest) {
+	int trained = test_training();
+
+	EXPECT_EQ(1, trained);
+}
+
+TEST(TestMSER, MSERTests) {
+
+	// Good test
+	std::vector<cv::Mat> mser = test_MSERGood();
+	EXPECT_NE(0, mser.size());
+
+	// Bad test
+	std::vector<cv::Mat> mser2 = test_MSERBad();
+	EXPECT_EQ(0, mser2.size());
+}
+
+TEST(TestHOG, HOGTest) {
+	cv::Mat image = test_HOG();
+
+	EXPECT_EQ(81, image.cols);
 }
 
 
