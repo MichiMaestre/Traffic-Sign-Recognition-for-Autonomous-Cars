@@ -104,13 +104,21 @@ float test_callback(double Area) {
 }
 
 
-TEST(TestCommand, MovesTest) {
+TEST(TestCommand, ForwardTest) {
 	bool type1 = testing_moves(1, 5500, true);
-	bool type2 = testing_moves(2, 5500, true);
-	bool type3 = testing_moves(3, 5500, true);
    
     EXPECT_EQ(false, type1);
+}
+
+TEST(TestCommand, TurnTest) {
+	bool type2 = testing_moves(2, 5500, true);
+   
     EXPECT_EQ(false, type2);
+}
+
+TEST(TestCommand, StopTest) {
+	bool type3 = testing_moves(3, 5500, true);
+   
     EXPECT_EQ(false, type3);
 }
 

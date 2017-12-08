@@ -40,5 +40,8 @@ if(CATKIN_ENABLE_TESTING)
   target_link_libraries(test_robot ${catkin_LIBRARIES} ${OpenCV_LIBS})
   add_dependencies(test_robot vision ${catkin_EXPORTED_TARGETS})
 
+  add_rostest_gtest(test_ros test/test_ros.launch test/test_ros.cpp test/testclass.cpp)
+  target_link_libraries(test_ros ${catkin_LIBRARIES} ${OpenCV_LIBS})
+  #add_dependencies(test_robot vision ${catkin_EXPORTED_TARGETS})
 
 endif()

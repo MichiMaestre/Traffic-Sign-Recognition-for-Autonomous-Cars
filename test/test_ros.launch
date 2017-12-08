@@ -1,0 +1,8 @@
+<launch>
+
+<!-- <node pkg="traffic_sign_recognition" name="test_ros" type="test_ros" >
+</node> -->
+
+<test test-name="test_ros" pkg="traffic_sign_recognition" type="test_ros" />
+
+</launch>

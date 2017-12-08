@@ -51,7 +51,7 @@ float testing_stop() {
 
 	visual.trainStage(hog, svm, trainImgs, trainLabels);
 
-	visual.imagen = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/stop.png");
+	visual.imagen = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/stop.png");
 	
 	if (!visual.imagen.empty()) {
 		cv::Mat img_denoise = visual.deNoise(visual.imagen);
@@ -82,7 +82,7 @@ float testing_turn() {
 
 	visual.trainStage(hog, svm, trainImgs, trainLabels);
 
-	visual.imagen = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/turn.png");
+	visual.imagen = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/turn.png");
 	
 	if (!visual.imagen.empty()) {
 		cv::Mat img_denoise = visual.deNoise(visual.imagen);
@@ -113,7 +113,7 @@ float testing_forward() {
 
 	visual.trainStage(hog, svm, trainImgs, trainLabels);
 
-	visual.imagen = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/forward.png");
+	visual.imagen = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/forward.png");
 	
 	if (!visual.imagen.empty()) {
 		cv::Mat img_denoise = visual.deNoise(visual.imagen);
@@ -149,7 +149,7 @@ int test_training() {
 std::vector<cv::Mat> test_MSERGood() {
 	classifier visual;
 
-	cv::Mat img = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/forward.png");
+	cv::Mat img = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/forward.png");
 	double area;
 	std::vector<cv::Mat> img_mser = visual.MSER_Features(img, area);
 
@@ -159,7 +159,7 @@ std::vector<cv::Mat> test_MSERGood() {
 std::vector<cv::Mat> test_MSERBad() {
 	classifier visual;
 
-	cv::Mat img = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/ratio_bad.png");
+	cv::Mat img = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/ratio_bad.png");
 	double area;
 	std::vector<cv::Mat> img_mser = visual.MSER_Features(img, area);
 
@@ -177,11 +177,11 @@ cv::Mat test_HOG() {
 					  1, 64, 1);
 
 	std::vector<cv::Mat> imgs;
-	cv::Mat img1 = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/forward.png");
+	cv::Mat img1 = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/forward.png");
 	cv::resize(img1, img1, cv::Size(64, 64));
 	imgs.push_back(img1);
 	
-	cv::Mat img2 = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/turn.png");
+	cv::Mat img2 = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/turn.png");
 	cv::resize(img2, img2, cv::Size(64, 64));
 	imgs.push_back(img2);
 
