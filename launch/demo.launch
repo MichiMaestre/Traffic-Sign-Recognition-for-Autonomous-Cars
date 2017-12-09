@@ -1,14 +1,5 @@
-<!-- <launch>
-
-<include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch">
-    <arg name="world_file" value ="$(find traffic_sign_recognition)/world/signs_world.sdf"/>
-
-</include>
-
-
-</launch> -->
-
 <launch>
+  <!-- Launch world with the traffic signs -->
   <arg name="world_file"  value ="$(find traffic_sign_recognition)/world/signs_world.sdf"/>
 
   <arg name="base"      value="$(optenv TURTLEBOT_BASE kobuki)"/> <!-- create, roomba -->
@@ -16,6 +7,8 @@
   <arg name="gui" default="true"/>
   <arg name="stacks"    value="$(optenv TURTLEBOT_STACKS hexagons)"/>  <!-- circles, hexagons --> 
   <arg name="3d_sensor" value="$(optenv TURTLEBOT_3D_SENSOR kinect)"/>  <!-- kinect, asus_xtion_pro --> 
+
+  <arg name="rosbagFlag" default= "false"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="use_sim_time" value="true"/>
@@ -44,4 +37,19 @@
     <remap from="image" to="/camera/depth/image_raw"/>
     <remap from="scan" to="/scan"/>
   </node>
+
+  <!-- Vision node -->
+  <node pkg="traffic_sign_recognition" name="vision" type="vision" cwd="node" output="screen">
+  </node>
+
+  <!-- Robot commands node -->
+  <node pkg="traffic_sign_recognition" name="robot" type="robot" cwd="node" output="screen">
+  </node>
+
+  <!-- Rosbag recording -->
+  <node pkg = "rosbag" name= "rosbag_record_all" type= "record"
+      args = "-a -x /camera/(.*) -O TSR " output = "screen" 
+      if="$(eval rosbagFlag == true)">
+  </node>
+
 </launch>

@@ -91,7 +91,7 @@ int main(int argc, char **argv) {
 
 				// Evaluate using the SVM
 				visual.traffic_sign = visual.SVMTesting(svm, testHOG);
-				std::cout << "Label: " << visual.traffic_sign << std::endl;
+				// std::cout << "Label: " << visual.traffic_sign << std::endl;
 
 				// Publish the type of sign through message
 				msg.area = area;
