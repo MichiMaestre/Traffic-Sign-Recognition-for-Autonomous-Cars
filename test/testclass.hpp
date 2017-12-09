@@ -24,20 +24,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #pragma once
 
-#include <opencv2/highgui/highgui.hpp>
 #include <cv_bridge/cv_bridge.h>
+#include <geometry_msgs/Twist.h>
 #include <vector>
+#include <opencv2/highgui/highgui.hpp>
 #include "opencv2/opencv.hpp"
 #include "ros/ros.h"
 #include "traffic_sign_recognition/sign.h"
-#include <geometry_msgs/Twist.h>
 
 class testclass {
-public:
-	double area;
-	float type; 
-	double vel;
-	void signCallback(traffic_sign_recognition::sign msg);
+ public:
+    double area;
+    float type;
+    double vel;
+    void signCallback(traffic_sign_recognition::sign msg);
 
-	void velCallback(geometry_msgs::Twist msg);
+    void velCallback(geometry_msgs::Twist msg);
 };

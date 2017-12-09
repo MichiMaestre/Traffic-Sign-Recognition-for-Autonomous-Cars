@@ -23,19 +23,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #include <gtest/gtest.h>
-#include "ros/ros.h"
 #include <vector>
+#include "ros/ros.h"
 #include "robot.hpp"
 #include "traffic_sign_recognition/sign.h"
 
 
 bool testing_moves(float sign_type, double Area, bool Flag) {
-	ros::NodeHandle n;
+    ros::NodeHandle n;
 
-	robot turtle;
+    robot turtle;
 
-	geometry_msgs::Twist velocity;
-	ros::Publisher pub = n.advertise<geometry_msgs::Twist>
+    geometry_msgs::Twist velocity;
+    ros::Publisher pub = n.advertise<geometry_msgs::Twist>
         ("/cmd_vel_mux/input/teleop", 1000);
     ros::Rate loop_rate(10);
 
@@ -51,42 +51,42 @@ bool testing_moves(float sign_type, double Area, bool Flag) {
 }
 
 float test_callback(double Area) {
-	ros::NodeHandle n;
+    ros::NodeHandle n;
 
-	robot turtle;
+    robot turtle;
 
-	traffic_sign_recognition::sign msg;
-	msg.sign_type = 1;
-	msg.area = Area;
+    traffic_sign_recognition::sign msg;
+    msg.sign_type = 1;
+    msg.area = Area;
 
-	turtle.signCallback(msg);
+    turtle.signCallback(msg);
 
-	return turtle.area;
+    return turtle.area;
 }
 
 
 TEST(TestCommand, ForwardTest) {
-	bool type1 = testing_moves(1, 5500, true);
-   
+    bool type1 = testing_moves(1, 5500, true);
+
     EXPECT_EQ(false, type1);
 }
 
 TEST(TestCommand, TurnTest) {
-	bool type2 = testing_moves(2, 5500, true);
-   
+    bool type2 = testing_moves(2, 5500, true);
+
     EXPECT_EQ(false, type2);
 }
 
 TEST(TestCommand, StopTest) {
-	bool type3 = testing_moves(3, 5500, true);
-   
+    bool type3 = testing_moves(3, 5500, true);
+
     EXPECT_EQ(false, type3);
 }
 
 TEST(TestCommand, CallbackTest) {
-	float area1 = test_callback(5500);
-	float area2 = test_callback(4500);
-   
+    float area1 = test_callback(5500);
+    float area2 = test_callback(4500);
+
     EXPECT_EQ(0, area1);
     EXPECT_EQ(4500, area2);
 }

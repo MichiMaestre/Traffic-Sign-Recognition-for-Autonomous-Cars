@@ -22,45 +22,40 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@brief Navigation node
  */
 
-#include <cstdlib>
 #include <string>
-// #include <image_transport/image_transport.h>
-#include <opencv2/highgui/highgui.hpp>
-#include <cv_bridge/cv_bridge.h>
-#include "opencv2/opencv.hpp"
+#include <cstdlib>
 #include "ros/ros.h"
 #include "ros/console.h"
 #include "robot.hpp"
 #include "traffic_sign_recognition/sign.h"
 
 int main(int argc, char **argv) {
-	// Node creation
-	ros::init(argc, argv, "robot");
-	ros::NodeHandle n;
+    // Node creation
+    ros::init(argc, argv, "robot");
+    ros::NodeHandle n;
 
-	// Initializations
-	robot turtle;
-	geometry_msgs::Twist velocity;
+    // Initializations
+    robot turtle;
+    geometry_msgs::Twist velocity;
 
-	// Subscriber
-	ros::Subscriber sub = n.subscribe("/traffic", 
-		1, &robot::signCallback, &turtle);
+    // Subscriber
+    ros::Subscriber sub = n.subscribe("/traffic",
+        1, &robot::signCallback, &turtle);
 
-	// Publisher
+    // Publisher
     ros::Publisher pub = n.advertise<geometry_msgs::Twist>
         ("/cmd_vel_mux/input/teleop", 1000);
 
     ros::Rate loop_rate(10);
-	while (ros::ok()) {
-		if (turtle.flag == false)
-			ros::spinOnce();
+    while (ros::ok()) {
+        if (turtle.flag == false)
+            ros::spinOnce();
 
-		// Publish velocity depending on type of sign
-		turtle.command(velocity, pub, loop_rate);
+        // Publish velocity depending on type of sign
+        turtle.command(velocity, pub, loop_rate);
 
-		loop_rate.sleep();
-
-	}
-	return 0;
+        loop_rate.sleep();
+    }
+    return 0;
 }
 

@@ -22,11 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@brief Vision node
  */
 
+#include <cv_bridge/cv_bridge.h>
 #include <cstdlib>
 #include <string>
-// #include <image_transport/image_transport.h>
 #include <opencv2/highgui/highgui.hpp>
-#include <cv_bridge/cv_bridge.h>
 #include "opencv2/opencv.hpp"
 #include "ros/ros.h"
 #include "ros/console.h"
@@ -35,74 +34,72 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 int main(int argc, char **argv) {
-	// Node creation
-	ros::init(argc, argv, "classification");
-	ros::NodeHandle n;
+    // Node creation
+    ros::init(argc, argv, "classification");
+    ros::NodeHandle n;
 
-	// Initializations
-	classifier visual;
+    // Initializations
+    classifier visual;
 
-	cv::HOGDescriptor hog(cv::Size(64, 64), 
-					  cv::Size(32,32), 
-					  cv::Size(16,16), 
-					  cv::Size(32,32), 
-					  9, 1,-1, 0, 0.2, 
-					  1, 64, 1);
-	ROS_INFO_STREAM("HOG Descriptor created");
+    cv::HOGDescriptor hog(cv::Size(64, 64),
+                      cv::Size(32, 32),
+                      cv::Size(16, 16),
+                      cv::Size(32, 32),
+                      9, 1, -1, 0, 0.2,
+                      1, 64, 1);
+    ROS_INFO_STREAM("HOG Descriptor created");
 
-	visual.imagen = cv::Mat::zeros(640, 480, CV_8UC3);
-	std::vector<cv::Mat> trainImgs;
-	std::vector<int> trainLabels;
-	cv::Mat trainHOG;
+    visual.imagen = cv::Mat::zeros(640, 480, CV_8UC3);
+    std::vector<cv::Mat> trainImgs;
+    std::vector<int> trainLabels;
+    cv::Mat trainHOG;
 
-	cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
-	ROS_INFO_STREAM("Support Vector Machine Created");
-	double area;
+    cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
+    ROS_INFO_STREAM("Support Vector Machine Created");
+    double area;
 
-	cv::Mat img_denoise;
-	std::vector<cv::Mat> imgs_mser(100);
-	cv::Mat testHOG;
-	float traffic_sign;
+    cv::Mat img_denoise;
+    std::vector<cv::Mat> imgs_mser(100);
+    cv::Mat testHOG;
 
 
-	// Image Subscriber
-	ros::Subscriber sub = n.subscribe("/camera/rgb/image_raw", 
-		1, &classifier::imageCallback, &visual);
+    // Image Subscriber
+    ros::Subscriber sub = n.subscribe("/camera/rgb/image_raw",
+        1, &classifier::imageCallback, &visual);
 
-	// Msg Publisher
-	ros::Publisher signPub = n.advertise<traffic_sign_recognition::sign>("traffic", 1);
-	traffic_sign_recognition::sign msg;
+    // Msg Publisher
+    ros::Publisher signPub = n.advertise<traffic_sign_recognition::sign>(
+        "traffic", 1);
+    traffic_sign_recognition::sign msg;
 
-	///////// TRAINING ////////////
-	int trained = visual.trainStage(hog, svm, trainImgs, trainLabels);
+    ///////// TRAINING ////////////
+    int trained = visual.trainStage(hog, svm, trainImgs, trainLabels);
 
-	//////// CLASSIFICATION /////////
-	ROS_INFO_STREAM("Detection and Classification started...");
-	int flagviz;
-	while (ros::ok()) {
-		if (!visual.imagen.empty()) {
-			// Get the detections
-			img_denoise = visual.deNoise(visual.imagen);
-			imgs_mser = visual.MSER_Features(visual.imagen, area);
+    //////// CLASSIFICATION /////////
+    ROS_INFO_STREAM("Detection and Classification started...");
+    while (ros::ok()) {
+        if (!visual.imagen.empty()) {
+            // Get the detections
+            img_denoise = visual.deNoise(visual.imagen);
+            imgs_mser = visual.MSER_Features(visual.imagen, area);
 
-			// HOG features of detections
-			if (imgs_mser.size() != 0) {
-				testHOG = visual.HOG_Features(hog, imgs_mser);
+            // HOG features of detections
+            if (imgs_mser.size() != 0) {
+                testHOG = visual.HOG_Features(hog, imgs_mser);
 
-				// Evaluate using the SVM
-				visual.traffic_sign = visual.SVMTesting(svm, testHOG);
-				// std::cout << "Label: " << visual.traffic_sign << std::endl;
+                // Evaluate using the SVM
+                visual.traffic_sign = visual.SVMTesting(svm, testHOG);
+                // std::cout << "Label: " << visual.traffic_sign << std::endl;
 
-				// Publish the type of sign through message
-				msg.area = area;
-				msg.sign_type = visual.traffic_sign;
-				signPub.publish(msg);
+                // Publish the type of sign through message
+                msg.area = area;
+                msg.sign_type = visual.traffic_sign;
+                signPub.publish(msg);
 
-				imgs_mser.clear();
-			}
-			flagviz = visual.visualization();
-		}
-		ros::spinOnce();
-	}
-
+                imgs_mser.clear();
+            }
+            int flagviz = visual.visualization();
+        }
+        ros::spinOnce();
+    }
 }

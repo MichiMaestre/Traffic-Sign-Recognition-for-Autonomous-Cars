@@ -22,22 +22,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@brief Header file for class classifier
  */
 
+#include <cv_bridge/cv_bridge.h>
+#include <geometry_msgs/Twist.h>
 #include <cstdlib>
 #include <string>
 #include <opencv2/highgui/highgui.hpp>
-#include <cv_bridge/cv_bridge.h>
 #include "ros/ros.h"
 #include "opencv2/opencv.hpp"
 #include "ros/console.h"
 #include "traffic_sign_recognition/sign.h"
-#include <geometry_msgs/Twist.h>
 #include "testclass.hpp"
 
 void testclass::signCallback(traffic_sign_recognition::sign msg) {
-	type = msg.sign_type;
-	area = msg.area;
+    type = msg.sign_type;
+    area = msg.area;
 }
 
 void testclass::velCallback(geometry_msgs::Twist msg) {
-	vel = msg.linear.x;
+    vel = msg.linear.x;
 }

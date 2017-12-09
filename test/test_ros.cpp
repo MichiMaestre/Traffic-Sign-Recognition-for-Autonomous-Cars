@@ -22,21 +22,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@brief Unit test code for publishers and subscribers
  */
 
-#include <gtest/gtest.h>
-#include "ros/ros.h"
-#include <opencv2/highgui/highgui.hpp>
+#include <geometry_msgs/Twist.h>
 #include <cv_bridge/cv_bridge.h>
+#include <gtest/gtest.h>
 #include <vector>
+#include <boost/thread.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include "ros/ros.h"
 #include "opencv2/opencv.hpp"
 #include "classifier.hpp"
 #include "traffic_sign_recognition/sign.h"
-#include <geometry_msgs/Twist.h>
 #include "testclass.hpp"
-#include <boost/thread.hpp>
 
 
 void processThread(void) {
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(2);
 
     while (ros::ok()) {
         ros::spinOnce();
@@ -45,27 +45,26 @@ void processThread(void) {
 }
 
 TEST(TestRos, PubSubTest) {
-	// double result = PubSubTest();
-   
-	ros::NodeHandle n;
+    ros::NodeHandle n;
 
-	testclass pubsub;
+    testclass pubsub;
 
-	ros::Rate loop_rate(10);
+    ros::Rate loop_rate(2);
 
-	ros::Publisher signPub = n.advertise<traffic_sign_recognition::sign>("traffic", 100);
+    ros::Publisher signPub = n.advertise<traffic_sign_recognition::sign>(
+        "traffic", 100);
 
-	ros::Subscriber sub = n.subscribe("/traffic", 
-		100, &testclass::signCallback, &pubsub);
+    ros::Subscriber sub = n.subscribe("/traffic",
+        100, &testclass::signCallback, &pubsub);
 
-	traffic_sign_recognition::sign msg;
-	msg.area = 5000;
-	msg.sign_type = 1;
-	signPub.publish(msg);
+    traffic_sign_recognition::sign msg;
+    msg.area = 5000;
+    msg.sign_type = 1;
+    signPub.publish(msg);
 
 
-	ros::spinOnce();
-	loop_rate.sleep();
+    ros::spinOnce();
+    loop_rate.sleep();
 
     EXPECT_EQ(1, sub.getNumPublishers());
     EXPECT_EQ(1, signPub.getNumSubscribers());
@@ -74,28 +73,26 @@ TEST(TestRos, PubSubTest) {
 }
 
 TEST(TestRos, velTest) {
-	// double result = PubSubTest();
-   
-	ros::NodeHandle n;
+    ros::NodeHandle n;
 
-	testclass pubsub;
+    testclass pubsub;
 
-	ros::Rate loop_rate(10);
+    ros::Rate loop_rate(2);
 
-	ros::Publisher pub = n.advertise<geometry_msgs::Twist>
+    ros::Publisher pub = n.advertise<geometry_msgs::Twist>
         ("/cmd_vel_mux/input/teleop", 1000);
 
-	ros::Subscriber sub = n.subscribe("/cmd_vel_mux/input/teleop", 
-		1000, &testclass::velCallback, &pubsub);
+    ros::Subscriber sub = n.subscribe("/cmd_vel_mux/input/teleop",
+        1000, &testclass::velCallback, &pubsub);
 
-	geometry_msgs::Twist msg;
-	msg.linear.x = 0.2;
+    geometry_msgs::Twist msg;
+    msg.linear.x = 0.2;
     msg.angular.z = 0.0;
-	pub.publish(msg);
+    pub.publish(msg);
 
 
-	ros::spinOnce();
-	loop_rate.sleep();
+    ros::spinOnce();
+    loop_rate.sleep();
 
     EXPECT_EQ(1, sub.getNumPublishers());
     EXPECT_EQ(1, pub.getNumSubscribers());

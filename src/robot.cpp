@@ -30,121 +30,119 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "traffic_sign_recognition/sign.h"
 
 void robot::signCallback(traffic_sign_recognition::sign msg) {
-	type = msg.sign_type;
-	area = msg.area;
-	if (area > 5200 && area < 6000) {
-		area = 0;
-		flag = true;
-	}
-	else
-		flag = false;
+    type = msg.sign_type;
+    area = msg.area;
+    if (area > 5200 && area < 6000) {
+        area = 0;
+        flag = true;
+    } else {
+        flag = false;
+    }
 
-	if (flag)
-		count++;
+    if (flag)
+        count++;
 }
 
-void robot::command(geometry_msgs::Twist &velocity, ros::Publisher &pub, ros::Rate &loop_rate){
-	if (flag == true) {
+void robot::command(geometry_msgs::Twist &velocity,
+    ros::Publisher &pub, ros::Rate &loop_rate) {
+    if (flag == true) {
+        //////// FORWARD //////
+        if (type == 1) {
+            ROS_INFO_STREAM("FORWARD SIGN DETECTED");
+            ros::Time start = ros::Time::now();
+            while (ros::Time::now() - start < ros::Duration(10.0)) {
+                velocity.linear.x = 0.2;
+                velocity.angular.z = 0.0;
+                // std::cout << velocity.linear.x << std::endl;
+                pub.publish(velocity);
+                loop_rate.sleep();
+            }
+            start = ros::Time::now();
+            while (ros::Time::now() - start < ros::Duration(1.0)) {
+                velocity.linear.x = 0.0;
+                velocity.angular.z = 0.17;
+                // std::cout << velocity.linear.x << std::endl;
+                pub.publish(velocity);
+                loop_rate.sleep();
+            }
+            start = ros::Time::now();
+            while (ros::Time::now() - start < ros::Duration(3.0)) {
+                velocity.linear.x = 0.0;
+                velocity.angular.z = 0.0;
+                // std::cout << velocity.linear.x << std::endl;
+                pub.publish(velocity);
+                loop_rate.sleep();
+            }
+            type = 0;
+            area = 0;
+            flag = false;
+        }
 
-		//////// FORWARD //////
-		if (type == 1) {
-			ROS_INFO_STREAM("FORWARD SIGN DETECTED");
-			ros::Time start = ros::Time::now();
-			while (ros::Time::now() - start < ros::Duration(10.0)) {
-				velocity.linear.x = 0.2;
-        		velocity.angular.z = 0.0;
-        		// std::cout << velocity.linear.x << std::endl;
-        		pub.publish(velocity);
-        		loop_rate.sleep();
-        	}
-        	start = ros::Time::now();
-			while (ros::Time::now() - start < ros::Duration(1.0)) {
-				velocity.linear.x = 0.0;
-        		velocity.angular.z = 0.17;
-        		// std::cout << velocity.linear.x << std::endl;
-        		pub.publish(velocity);
-        		loop_rate.sleep();
-        	}
-        	start = ros::Time::now();
-			while (ros::Time::now() - start < ros::Duration(3.0)) {
-				velocity.linear.x = 0.0;
-        		velocity.angular.z = 0.0;
-        		// std::cout << velocity.linear.x << std::endl;
-        		pub.publish(velocity);
-        		loop_rate.sleep();
-        	}
-        	type = 0;
-        	area = 0;
-        	flag = false;
-		}
 
+        ///////// TURN ////////
+        if (type == 2) {
+            ROS_INFO_STREAM("TURN SIGN DETECTED");
+            ros::Time start = ros::Time::now();
+            while (ros::Time::now() - start < ros::Duration(10.0)) {
+                velocity.linear.x = 0.2;
+                velocity.angular.z = 0.0;
+                // std::cout << velocity.linear.x << std::endl;
+                pub.publish(velocity);
+                loop_rate.sleep();
+            }
+            start = ros::Time::now();
+            while (ros::Time::now() - start < ros::Duration(3.0)) {
+                velocity.linear.x = 0.0;
+                velocity.angular.z = 0.0;
+                // std::cout << velocity.linear.x << std::endl;
+                pub.publish(velocity);
+                loop_rate.sleep();
+            }
+            start = ros::Time::now();
+            while (ros::Time::now() - start < ros::Duration(6)) {
+                velocity.linear.x = 0.4;
+                velocity.angular.z = 0.3;
+                // std::cout << velocity.linear.x << std::endl;
+                pub.publish(velocity);
+                loop_rate.sleep();
+            }
+            type = 0;
+            area = 0;
+            flag = false;
+        }
 
-		///////// TURN ////////
-		if (type == 2) {
+        ///////// STOP ////////
+        if (type == 3) {
+            ROS_INFO_STREAM("STOP SIGN DETECTED");
+            ros::Time start = ros::Time::now();
+            while (ros::Time::now() - start < ros::Duration(5.0)) {
+                velocity.linear.x = 0.2;
+                velocity.angular.z = 0.0;
+                // std::cout << velocity.linear.x << std::endl;
+                pub.publish(velocity);
+                loop_rate.sleep();
+            }
+            start = ros::Time::now();
+            while (ros::Time::now() - start < ros::Duration(3.0)) {
+                velocity.linear.x = 0.0;
+                velocity.angular.z = 0.0;
+                // std::cout << velocity.linear.x << std::endl;
+                pub.publish(velocity);
+                loop_rate.sleep();
+            }
+            type = 0;
+            area = 0;
+            flag = false;
 
-			ROS_INFO_STREAM("TURN SIGN DETECTED");
-			ros::Time start = ros::Time::now();
-			while (ros::Time::now() - start < ros::Duration(10.0)) {
-				velocity.linear.x = 0.2;
-        		velocity.angular.z = 0.0;
-        		// std::cout << velocity.linear.x << std::endl;
-        		pub.publish(velocity);
-        		loop_rate.sleep();
-        	}
-        	start = ros::Time::now();
-			while (ros::Time::now() - start < ros::Duration(3.0)) {
-				velocity.linear.x = 0.0;
-        		velocity.angular.z = 0.0;
-        		// std::cout << velocity.linear.x << std::endl;
-        		pub.publish(velocity);
-        		loop_rate.sleep();
-        	}
-        	start = ros::Time::now();
-			while (ros::Time::now() - start < ros::Duration(6)) {
-				velocity.linear.x = 0.4;
-        		velocity.angular.z = 0.3;
-        		// std::cout << velocity.linear.x << std::endl;
-        		pub.publish(velocity);
-        		loop_rate.sleep();
-        	}
-        	type = 0;
-        	area = 0;
-        	flag = false;
-		}
+            ROS_INFO_STREAM("DESTINATION REACHED");
+            return;
+        }
+    }
 
-		///////// STOP ////////
-		if (type == 3) {
-
-			ROS_INFO_STREAM("STOP SIGN DETECTED");
-			ros::Time start = ros::Time::now();
-			while (ros::Time::now() - start < ros::Duration(5.0)) {
-				velocity.linear.x = 0.2;
-        		velocity.angular.z = 0.0;
-        		// std::cout << velocity.linear.x << std::endl;
-        		pub.publish(velocity);
-        		loop_rate.sleep();
-        	}
-			start = ros::Time::now();
-			while (ros::Time::now() - start < ros::Duration(3.0)) {
-				velocity.linear.x = 0.0;
-        		velocity.angular.z = 0.0;
-        		// std::cout << velocity.linear.x << std::endl;
-        		pub.publish(velocity);
-        		loop_rate.sleep();
-        	}
-        	type = 0;
-        	area = 0;
-        	flag = false;
-
-        	ROS_INFO_STREAM("DESTINATION REACHED");
-        	return;
-		}
-	}
-
-	if (flag == false) {
-		velocity.linear.x = 0.3;
-    	velocity.angular.z = 0.0;
-    	pub.publish(velocity);
-	}
-	// std::cout << "Signs detected: " << count << std::endl;
+    if (flag == false) {
+        velocity.linear.x = 0.3;
+        velocity.angular.z = 0.0;
+        pub.publish(velocity);
+    }
+    // std::cout << "Signs detected: " << count << std::endl;
 }
