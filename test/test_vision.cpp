@@ -53,7 +53,10 @@ float testing_stop() {
 
 	visual.trainStage(hog, svm, trainImgs, trainLabels);
 
-	visual.imagen = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/stop.png");
+	cv::String path1 = "./test_imgs/stop";
+	std::vector<cv::String> img_stop;
+	cv::glob(path1, img_stop);
+	visual.imagen = cv::imread(img_stop[0]);
 	
 	if (!visual.imagen.empty()) {
 		cv::Mat img_denoise = visual.deNoise(visual.imagen);
@@ -84,7 +87,10 @@ float testing_turn() {
 
 	visual.trainStage(hog, svm, trainImgs, trainLabels);
 
-	visual.imagen = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/turn.png");
+	cv::String path1 = "./test_imgs/turn";
+	std::vector<cv::String> img_turn;
+	cv::glob(path1, img_turn);
+	visual.imagen = cv::imread(img_turn[0]);
 	
 	if (!visual.imagen.empty()) {
 		cv::Mat img_denoise = visual.deNoise(visual.imagen);
@@ -115,7 +121,10 @@ float testing_forward() {
 
 	visual.trainStage(hog, svm, trainImgs, trainLabels);
 
-	visual.imagen = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/forward.png");
+	cv::String path1 = "./test_imgs/forw";
+	std::vector<cv::String> img_forw;
+	cv::glob(path1, img_forw);
+	visual.imagen = cv::imread(img_forw[0]);
 	
 	if (!visual.imagen.empty()) {
 		cv::Mat img_denoise = visual.deNoise(visual.imagen);
@@ -151,7 +160,10 @@ int test_training() {
 std::vector<cv::Mat> test_MSERGood() {
 	classifier visual;
 
-	cv::Mat img = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/forward.png");
+	cv::String path1 = "./test_imgs/forw";
+	std::vector<cv::String> img_forw;
+	cv::glob(path1, img_forw);
+	cv::Mat img = cv::imread(img_forw[0]);
 	double area;
 	std::vector<cv::Mat> img_mser = visual.MSER_Features(img, area);
 
@@ -161,7 +173,10 @@ std::vector<cv::Mat> test_MSERGood() {
 std::vector<cv::Mat> test_MSERBad() {
 	classifier visual;
 
-	cv::Mat img = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/ratio_bad.png");
+	cv::String path1 = "./test_imgs/bad";
+	std::vector<cv::String> img_bad;
+	cv::glob(path1, img_bad);
+	cv::Mat img = cv::imread(img_bad[0]);
 	double area;
 	std::vector<cv::Mat> img_mser = visual.MSER_Features(img, area);
 
@@ -179,11 +194,18 @@ cv::Mat test_HOG() {
 					  1, 64, 1);
 
 	std::vector<cv::Mat> imgs;
-	cv::Mat img1 = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/forward.png");
+
+	cv::String path1 = "./test_imgs/forw";
+	std::vector<cv::String> img_forw;
+	cv::glob(path1, img_forw);
+	cv::Mat img1 = cv::imread(img_forw[0]);
 	cv::resize(img1, img1, cv::Size(64, 64));
 	imgs.push_back(img1);
 	
-	cv::Mat img2 = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/turn.png");
+	cv::String path2 = "./test_imgs/turn";
+	std::vector<cv::String> img_turn;
+	cv::glob(path2, img_turn);
+	cv::Mat img2 = cv::imread(img_turn[0]);
 	cv::resize(img2, img2, cv::Size(64, 64));
 	imgs.push_back(img2);
 
@@ -196,7 +218,10 @@ cv::Mat test_HOG() {
 int test_viz(int type) {
 	classifier visual;
 
-	visual.imagen = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/forward.png");
+	cv::String path1 = "./test_imgs/forw";
+	std::vector<cv::String> img_forw;
+	cv::glob(path1, img_forw);
+	visual.imagen = cv::imread(img_forw[0]);
 	visual.traffic_sign = type;
 	cv::Rect rect(1, 1, 10, 10);
 	std::vector<cv::Rect> rects;

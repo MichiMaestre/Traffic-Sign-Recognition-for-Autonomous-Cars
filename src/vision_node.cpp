@@ -81,14 +81,9 @@ int main(int argc, char **argv) {
 	int flagviz;
 	while (ros::ok()) {
 		if (!visual.imagen.empty()) {
-			// cv::namedWindow("view");
-			// imshow("view", visual.imagen);
-			
 			// Get the detections
 			img_denoise = visual.deNoise(visual.imagen);
 			imgs_mser = visual.MSER_Features(visual.imagen, area);
-			// msg.area = area;
-			// std::cout << area << std::endl;
 
 			// HOG features of detections
 			if (imgs_mser.size() != 0) {
@@ -97,7 +92,6 @@ int main(int argc, char **argv) {
 				// Evaluate using the SVM
 				visual.traffic_sign = visual.SVMTesting(svm, testHOG);
 				std::cout << "Label: " << visual.traffic_sign << std::endl;
-				// ROS_INFO_STREAM("Label: %f", traffic_sign);
 
 				// Publish the type of sign through message
 				msg.area = area;
@@ -110,6 +104,5 @@ int main(int argc, char **argv) {
 		}
 		ros::spinOnce();
 	}
-	// cv::destroyWindow("view2");
 
 }

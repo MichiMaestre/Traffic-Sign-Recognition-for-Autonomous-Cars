@@ -30,13 +30,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "opencv2/opencv.hpp"
 #include "ros/console.h"
 #include "classifier.hpp"
+// #include "../../../src/traffic_sign_recognition/Training_Images/*"
+
 
 void classifier::imageCallback(const sensor_msgs::ImageConstPtr& msg) {
 	cv_bridge::CvImagePtr cv_ptr;
 	try {
     	cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
     	imagen = cv_ptr->image;
-    	// cv::imshow("view", imagen);
     	cv::waitKey(30);
   	}
   	catch (cv_bridge::Exception& e) {
@@ -80,70 +81,61 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img, double &area) {
 	std::vector<cv::Rect> mser_bbox;
 	ms->detectRegions(rb_binary, regions, mser_bbox);
 
-	for (int i = 0; i < regions.size(); i++) {
+	for (cv::Rect i : mser_bbox) {
 		// Ratio filter of detected regions
-		double ratio = static_cast<double>(mser_bbox[i].height) / static_cast<double>(mser_bbox[i].width);
+		double ratio = static_cast<double>(i.height) / static_cast<double>(i.width);
 
 		if (ratio > 0.8 && ratio < 1.2) {
 			// Crop bounding boxes to get new images
-        	detection = img(mser_bbox[i]);
+        	detection = img(i);
 
-        	// rectangle(img, mser_bbox[i], CV_RGB(255, 0, 0));
-
-        	area = static_cast<double>(mser_bbox[i].height) * static_cast<double>(mser_bbox[i].width);
-        	// std::cout << area << std::endl;
-
-   //      	cv::namedWindow("view2");
-			// imshow("view2", img);
+        	area = static_cast<double>(i.height) * static_cast<double>(i.width);
 
         	// Resize images  to fit the trained data
         	cv::resize(detection, detection, size);
 
         	// Output the vector of images
         	detections.push_back(detection);
-        	this->boxes.push_back(mser_bbox[i]);
+        	this->boxes.push_back(i);
 		}
-		// else
-		// 	area = 0;
     }
 	return detections;
 }
 
 cv::Mat classifier::HOG_Features(cv::HOGDescriptor hog, std::vector<cv::Mat> imgs) {
-
-	// CHANGE TO IMGS INSTEAD OF SINGLE IMG
-	// TRAINHOG MAT SHOULD HAVE ALL THE INFORMATION
 	std::vector<std::vector<float> > HOG;
 
-	for (int i = 0; i < imgs.size(); i++) {
+	for (cv::Mat i : imgs) {
 		std::vector<float> descriptor;
-		hog.compute(imgs[i], descriptor);
+		hog.compute(i, descriptor);
 		HOG.push_back(descriptor);
 	}
 
 	// Convert HOG features vector to Matrix
 	cv::Mat signMat(HOG.size(), HOG[0].size(), CV_32FC1);
-	// std::cout << signMat.size() << std::endl;
-	for (int i = 0; i < HOG.size(); i++) {
-		for (int j = 0; j < HOG[0].size(); j++) {
-			signMat.at<float>(i,j) = HOG[i][j]; 
+	auto i = 0;
+	while (i < HOG.size()) {
+		auto j = 0;
+		while (j < HOG[0].size()) {
+			signMat.at<float>(i,j) = HOG[i][j];
+			j++;
 		}
+		i++;
 	}
-
 	return signMat;
 }
 
 void classifier::loadTrainingImgs(std::vector<cv::Mat> &trainImgs, std::vector<int> &trainLabels) {
 
-	cv::String pathname = "/home/michi/catkin_ws/src/traffic_sign_recognition/Training_Images/1";
-	// cv::String pathname = "../../../src\\traffic_sign_recognition\\Training_Images\\1";
+	// cv::String pathname = "/home/michi/catkin_ws/src/traffic_sign_recognition/Training_Images/1";
+	cv::String pathname = "./Training_Images/1";
 	std::vector<cv::String> filenames;
 	cv::glob(pathname, filenames);
 	cv::Size size(64, 64);
 
 	// std::cout << filenames.size() << std::endl;
-	for (int i = 0; i < filenames.size(); i++) {
-		cv::Mat src = imread(filenames[i]);
+	for (cv::String i : filenames) {
+		cv::Mat src = imread(i);
 
 		cv::resize(src, src, size);
 		
@@ -151,15 +143,15 @@ void classifier::loadTrainingImgs(std::vector<cv::Mat> &trainImgs, std::vector<i
 		trainLabels.push_back(1);
 	}
 
-	cv::String pathname2 = "/home/michi/catkin_ws/src/traffic_sign_recognition/Training_Images/2";
-	// cv::String pathname = "../../../src\\traffic_sign_recognition\\Training_Images\\1";
+	// cv::String pathname2 = "/home/michi/catkin_ws/src/traffic_sign_recognition/Training_Images/2";
+	cv::String pathname2 = "./Training_Images/2";
 	std::vector<cv::String> filenames2;
 	cv::glob(pathname2, filenames2);
 	cv::Size size2(64, 64);
 
 	// std::cout << filenames.size() << std::endl;
-	for (int i = 0; i < filenames2.size(); i++) {
-		cv::Mat src2 = imread(filenames2[i]);
+	for (cv::String i : filenames2) {
+		cv::Mat src2 = imread(i);
 
 		cv::resize(src2, src2, size2);
 		
@@ -167,15 +159,15 @@ void classifier::loadTrainingImgs(std::vector<cv::Mat> &trainImgs, std::vector<i
 		trainLabels.push_back(2);
 	}
 
-	cv::String pathname3 = "/home/michi/catkin_ws/src/traffic_sign_recognition/Training_Images/3";
-	// cv::String pathname = "../../../src\\traffic_sign_recognition\\Training_Images\\1";
+	// cv::String pathname3 = "/home/michi/catkin_ws/src/traffic_sign_recognition/Training_Images/3";
+	cv::String pathname3 = "./Training_Images/3";
 	std::vector<cv::String> filenames3;
 	cv::glob(pathname3, filenames3);
 	cv::Size size3(64, 64);
 
 	// std::cout << filenames.size() << std::endl;
-	for (int i = 0; i < filenames3.size(); i++) {
-		cv::Mat src3 = imread(filenames3[i]);
+	for (cv::String i : filenames3) {
+		cv::Mat src3 = imread(i);
 
 		cv::resize(src3, src3, size3);
 		
@@ -207,6 +199,7 @@ int classifier::trainStage(cv::HOGDescriptor &hog, cv::Ptr<cv::ml::SVM> &svm, st
 	ROS_INFO_STREAM("SVM Training Stage completed");
 	ros::Duration(2).sleep();
 
+
 	// Return 1 as success 
 	return 1;
 }
@@ -216,10 +209,10 @@ float classifier::SVMTesting(cv::Ptr<cv::ml::SVM> &svm, cv::Mat testHOG) {
 
 	svm->predict(testHOG, answer);
 
-	// std::cout << answer.rows << std::endl;
-	for(int i = 0; i < answer.rows; i++) {
-		// std::cout << "Label: " << answer.at<float>(i,0) << std::endl;
+	auto i = 0;
+	while (i < answer.rows) {
 		this->traffic_sign = answer.at<float>(i,0);
+		i++;
 		return this->traffic_sign;
 	}
 }
