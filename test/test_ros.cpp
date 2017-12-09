@@ -53,10 +53,10 @@ TEST(TestRos, PubSubTest) {
 
 	ros::Rate loop_rate(10);
 
-	ros::Publisher signPub = n.advertise<traffic_sign_recognition::sign>("traffic", 1);
+	ros::Publisher signPub = n.advertise<traffic_sign_recognition::sign>("traffic", 100);
 
 	ros::Subscriber sub = n.subscribe("/traffic", 
-		1, &testclass::signCallback, &pubsub);
+		100, &testclass::signCallback, &pubsub);
 
 	traffic_sign_recognition::sign msg;
 	msg.area = 5000;

@@ -74,26 +74,15 @@ int main(int argc, char **argv) {
 	traffic_sign_recognition::sign msg;
 
 	///////// TRAINING ////////////
-	// ROS_INFO_STREAM("SVM Training Stage started...");
-	// // Load training data and resize
-	// visual.loadTrainingImgs(trainImgs, trainLabels);
-
-	// // HOG features of training images
-	// trainHOG = visual.HOG_Features(hog, trainImgs);
-
-	// // Train SVM and save model
-	// visual.SVMTraining(svm, trainHOG, trainLabels);
-	// ROS_INFO_STREAM("SVM Training Stage completed");
-	// ros::Duration(2).sleep();
-
 	int trained = visual.trainStage(hog, svm, trainImgs, trainLabels);
 
 	//////// CLASSIFICATION /////////
 	ROS_INFO_STREAM("Detection and Classification started...");
+	int flagviz;
 	while (ros::ok()) {
 		if (!visual.imagen.empty()) {
-			cv::namedWindow("view");
-			imshow("view", visual.imagen);
+			// cv::namedWindow("view");
+			// imshow("view", visual.imagen);
 			
 			// Get the detections
 			img_denoise = visual.deNoise(visual.imagen);
@@ -106,17 +95,18 @@ int main(int argc, char **argv) {
 				testHOG = visual.HOG_Features(hog, imgs_mser);
 
 				// Evaluate using the SVM
-				traffic_sign = visual.SVMTesting(svm, testHOG);
-				std::cout << "Label: " << traffic_sign << std::endl;
+				visual.traffic_sign = visual.SVMTesting(svm, testHOG);
+				std::cout << "Label: " << visual.traffic_sign << std::endl;
 				// ROS_INFO_STREAM("Label: %f", traffic_sign);
 
 				// Publish the type of sign through message
 				msg.area = area;
-				msg.sign_type = traffic_sign;
+				msg.sign_type = visual.traffic_sign;
 				signPub.publish(msg);
 
 				imgs_mser.clear();
 			}
+			flagviz = visual.visualization();
 		}
 		ros::spinOnce();
 	}

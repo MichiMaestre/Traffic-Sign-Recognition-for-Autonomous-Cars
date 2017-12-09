@@ -101,6 +101,7 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img, double &area) {
 
         	// Output the vector of images
         	detections.push_back(detection);
+        	this->boxes.push_back(mser_bbox[i]);
 		}
 		// else
 		// 	area = 0;
@@ -218,6 +219,34 @@ float classifier::SVMTesting(cv::Ptr<cv::ml::SVM> &svm, cv::Mat testHOG) {
 	// std::cout << answer.rows << std::endl;
 	for(int i = 0; i < answer.rows; i++) {
 		// std::cout << "Label: " << answer.at<float>(i,0) << std::endl;
-		return answer.at<float>(i,0);
+		this->traffic_sign = answer.at<float>(i,0);
+		return this->traffic_sign;
 	}
+}
+
+int classifier::visualization() {
+	cv::Mat viz;
+	this->imagen.copyTo(viz);
+	cv::putText(viz, "Robot View", cv::Point(10,30), cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 0, 255));
+
+	for (cv::Rect i : this->boxes) {
+		cv::rectangle(viz, i, CV_RGB(50, 200, 0), 2);
+		if (this->traffic_sign == 1) {
+			cv::Point org(i.x, i.y - 5); 
+			cv::putText(viz, "Forward", org, cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 0, 255)); 
+		}
+		if (this->traffic_sign == 2) {
+			cv::Point org(i.x, i.y - 5); 
+			cv::putText(viz, "Turn", org, cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 0, 255)); 
+		}
+		if (this->traffic_sign == 3) {
+			cv::Point org(i.x, i.y - 5); 
+			cv::putText(viz, "Stop", org, cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 0, 255)); 
+		}
+	}
+
+	this->boxes.clear();
+	cv::namedWindow("view");
+	imshow("view", viz);
+	return 1;
 }

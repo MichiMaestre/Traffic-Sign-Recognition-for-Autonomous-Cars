@@ -28,45 +28,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "robot.hpp"
 #include "traffic_sign_recognition/sign.h"
 
-// bool testing_forwardmove() {
-// 	ros::NodeHandle n;
-
-// 	robot turtle;
-
-// 	geometry_msgs::Twist velocity;
-// 	ros::Publisher pub = n.advertise<geometry_msgs::Twist>
-//         ("/cmd_vel_mux/input/teleop", 1000);
-//     ros::Rate loop_rate(10);
-
-
-//     turtle.type = 1;
-//     turtle.area = 5500;
-
-
-//     turtle.command(velocity, pub, loop_rate);
-
-//     return turtle.flag;
-// }
-
-// bool testing_turnmove() {
-// 	ros::NodeHandle n;
-
-// 	robot turtle;
-
-// 	geometry_msgs::Twist velocity;
-// 	ros::Publisher pub = n.advertise<geometry_msgs::Twist>
-//         ("/cmd_vel_mux/input/teleop", 1000);
-//     ros::Rate loop_rate(10);
-
-
-//     turtle.type = 2;
-//     turtle.area = 5500;
-
-
-//     turtle.command(velocity, pub, loop_rate);
-
-//     return turtle.flag;
-// }
 
 bool testing_moves(float sign_type, double Area, bool Flag) {
 	ros::NodeHandle n;

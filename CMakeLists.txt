@@ -34,11 +34,11 @@ if(CATKIN_ENABLE_TESTING)
 
   add_rostest_gtest(test_vision test/test_vision.launch test/test_vision.cpp src/classifier.cpp)
   target_link_libraries(test_vision ${catkin_LIBRARIES} ${OpenCV_LIBS})
-  ##add_dependencies(test_vision ${catkin_EXPORTED_TARGETS})
+  ##add_dependencies(test_vision vision ${catkin_EXPORTED_TARGETS})
 
   add_rostest_gtest(test_robot test/test_robot.launch test/test_robot.cpp src/robot.cpp)
   target_link_libraries(test_robot ${catkin_LIBRARIES} ${OpenCV_LIBS})
-  add_dependencies(test_robot vision ${catkin_EXPORTED_TARGETS})
+  ##add_dependencies(test_robot vision ${catkin_EXPORTED_TARGETS})
 
   add_rostest_gtest(test_ros test/test_ros.launch test/test_ros.cpp test/testclass.cpp)
   target_link_libraries(test_ros ${catkin_LIBRARIES} ${OpenCV_LIBS})

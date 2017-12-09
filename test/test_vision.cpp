@@ -26,6 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ros/ros.h"
 #include <opencv2/highgui/highgui.hpp>
 #include <cv_bridge/cv_bridge.h>
+#include <sensor_msgs/Image.h>
+#include <sensor_msgs/image_encodings.h>
 #include <vector>
 #include "opencv2/opencv.hpp"
 #include "classifier.hpp"
@@ -190,6 +192,24 @@ cv::Mat test_HOG() {
 	return HOG;
 }
 
+
+int test_viz(int type) {
+	classifier visual;
+
+	visual.imagen = cv::imread("/home/michi/catkin_ws/src/traffic_sign_recognition/test/imgs/forward.png");
+	visual.traffic_sign = type;
+	cv::Rect rect(1, 1, 10, 10);
+	std::vector<cv::Rect> rects;
+	rects.push_back(rect);
+	visual.boxes = rects;
+
+	int uno = visual.visualization();
+	
+	return uno;
+}
+
+
+
 TEST(TestSigns, stopTest) {
 	float type = testing_stop();
    
@@ -229,6 +249,17 @@ TEST(TestHOG, HOGTest) {
 	cv::Mat image = test_HOG();
 
 	EXPECT_EQ(81, image.cols);
+}
+
+TEST(TestViz, VizTest) {
+	int uno = test_viz(1);
+    EXPECT_EQ(1, uno);
+
+    int dos = test_viz(2);
+    EXPECT_EQ(1, dos);
+
+    int tres = test_viz(3);
+    EXPECT_EQ(1, tres);
 }
 
 

@@ -39,6 +39,10 @@ private:
 public:
 	cv::Mat imagen;
 
+	std::vector<cv::Rect> boxes;
+
+	float traffic_sign;
+
 	void imageCallback(const sensor_msgs::ImageConstPtr& msg);
 
 	cv::Mat deNoise(cv::Mat inputImage);
@@ -50,4 +54,6 @@ public:
 	int trainStage(cv::HOGDescriptor &hog, cv::Ptr<cv::ml::SVM> &svm, std::vector<cv::Mat> &trainImgs, std::vector<int> &trainLabels);
 
 	float SVMTesting(cv::Ptr<cv::ml::SVM> &svm, cv::Mat testHOG);
+
+	int visualization();
 };
