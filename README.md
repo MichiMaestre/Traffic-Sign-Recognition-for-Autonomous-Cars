@@ -26,14 +26,14 @@ The second diagram describes the main algorithm of the project. It involves two 
 
 ![activity_main](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/UML/revised/Main_ActivityUML_Revised.png)
 
-### Training and testing traffic signs
-Explain how training was done, show example of couple of trasining images...
+#### Training and testing traffic signs
+For this project, only three types of signs were used: stop sign, turn sign and forward sign. To train the SVM, numerous and different images from the [Belgian dataset](http://btsd.ethz.ch/shareddata/) were used.  For future work, more types of signs can be added to the training stage easily. Two examples of the type of images that were used can be seen below.
 
-![stop](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/Images/Training_Images/3/00546_00002.ppm)
+![stop](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/Images/train_2.png)
 
-![turn](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/Images/Training_Images/2/00031_00001.ppm)
+![turn](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/Images/train_1.png)
 
-Results of the main algorithm, outputted from robot view...
+Once the SVM was trained, it detects the traffic signs in different images. The following images correspond to the robot's point of view of the workspace. A bounding box and the type of sign can be seen in the image to help visualizing the results. This information is then sent to the robot commander node, that, depending on the type of sign detected, will move the robot in one way or another.
 
 ![robot_view1](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/Images/robot_view1.png)
 
@@ -75,13 +75,62 @@ The project will consist of three iterations:
 
 ## How to build
 
+To build the package, follow the next steps:
+
+```
+mkdir -p ~/ros_ws/src
+cd ~/ros_ws/src
+git clone https://github.com/MichiMaestre/traffic_sign_recognition.git
+cd ..
+catkin_make
+cp -R ~/ros_ws/src/traffic_sign_recognition/Images/Training_Images/ ~/ros_ws/devel/lib/traffic_sign_recognition/
+cp -R ~/ros_ws/src/traffic_sign_recognition/Images/test_imgs/ ~/ros_ws/devel/lib/traffic_sign_recognition/
+```
 ## How to run
+
+To run the package, follow the next steps:
+
+```
+cd ~/ros_ws
+source devel/setup.bash
+roslaunch traffic_sign_recognition demo.launch
+```
 
 ## Testing
 
-## Record a bag file
+To run the tests, follow the next steps:
+
+```
+cd ~/ros_ws
+source devel/setup.bash
+catkin_make run_tests
+```
+The command takes some time to finish.
+
+## Recording a bag file
+
+By default, recording the demo in a bag file is disabled. If wanted, all the topics except for the camera ones can be recorded by following the next commands:
+
+```
+cd ~/ros_ws
+source devel/setup.bash
+roslaunch traffic_sign_recognition demo.launch rosbagFlag :=true
+```
+
+This will record the data in  `TSR.bag` in the ~/.ros folder. To access it and see its information:
+
+```
+cd ~/.ros
+rosbag info TSR.bag
+```
 
 ## Known issues/bugs
+
+The only two detected issues for now:
+
+* When running the demo, false classification of a sign can happen. This will take the robot to, for example, take a turn when there's no turn sign. From all the simulations, this only happened once.
+
+* The Gazebo model of turtlebot drifts towards the right when moving forward for a long distance. This had to be rectified in the stops the robot does during the demo.
 
 ## License
 
