@@ -19,7 +19,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@copyright Copyright 2017 Miguel Maestre Trueba
  *@file vision_node.cpp
  *@author Miguel Maestre Trueba
- *@brief Vision node
+ *@brief Vision node where all the main functions of the detection and recognition happen.
  */
 
 #include <cv_bridge/cv_bridge.h>
@@ -32,7 +32,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "classifier.hpp"
 #include "traffic_sign_recognition/sign.h"
 
-
+/**
+ *@brief Function main that runs the main algorithm of the traffic sign recognition.
+ *@brief It reads images from the robot's camera using a ROS subscriber.
+ *@brief A SVM is trained and used to classify new signs features found by the robot.
+ *@brief The type of sign and the size of the detection are published using a custom message.
+ *@param argc is the number of arguments.
+ *@param argv is the arguments characters array.
+ *@return 0
+ */
 int main(int argc, char **argv) {
     // Node creation
     ros::init(argc, argv, "classification");
@@ -67,7 +75,7 @@ int main(int argc, char **argv) {
     ros::Subscriber sub = n.subscribe("/camera/rgb/image_raw",
         1, &classifier::imageCallback, &visual);
 
-    // Msg Publisher
+    // Custom message Publisher
     ros::Publisher signPub = n.advertise<traffic_sign_recognition::sign>(
         "traffic", 1);
     traffic_sign_recognition::sign msg;
@@ -79,17 +87,19 @@ int main(int argc, char **argv) {
     ROS_INFO_STREAM("Detection and Classification started...");
     while (ros::ok()) {
         if (!visual.imagen.empty()) {
-            // Get the detections
+            // Denoise image with gaussian blur
             img_denoise = visual.deNoise(visual.imagen);
+
+            // Get the detections using MSER
             imgs_mser = visual.MSER_Features(visual.imagen, area);
 
-            // HOG features of detections
+            // If there are detection in the frame:
             if (imgs_mser.size() != 0) {
+                // HOG features of detections
                 testHOG = visual.HOG_Features(hog, imgs_mser);
 
                 // Evaluate using the SVM
                 visual.traffic_sign = visual.SVMTesting(svm, testHOG);
-                // std::cout << "Label: " << visual.traffic_sign << std::endl;
 
                 // Publish the type of sign through message
                 msg.area = area;
@@ -98,8 +108,10 @@ int main(int argc, char **argv) {
 
                 imgs_mser.clear();
             }
+            // Visualization of the robot view with all the detections
             int flagviz = visual.visualization();
         }
         ros::spinOnce();
     }
+    return 0;
 }

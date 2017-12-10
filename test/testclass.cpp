@@ -17,9 +17,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *
  *@copyright Copyright 2017 Miguel Maestre Trueba
- *@file classifier.hpp
+ *@file testclass.cpp
  *@author Miguel Maestre Trueba
- *@brief Header file for class classifier
+ *@brief Implementation of the methods of class testclass.
  */
 
 #include <cv_bridge/cv_bridge.h>

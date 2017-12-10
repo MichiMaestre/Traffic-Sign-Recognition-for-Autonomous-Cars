@@ -1,0 +1,6 @@
+<map id="/home/michi/catkin_ws/src/traffic_sign_recognition/include/classifier.hpp" name="/home/michi/catkin_ws/src/traffic_sign_recognition/include/classifier.hpp">
+<area shape="rect" id="node2" href="$classifier_8cpp.html" title="Implementation of the methods of class classifier. " alt="" coords="5,131,200,187"/>
+<area shape="rect" id="node3" href="$vision__node_8cpp.html" title="Vision node where all the main functions of the detection and recognition happen. ..." alt="" coords="224,124,376,195"/>
+<area shape="rect" id="node4" href="$test__ros_8cpp.html" title="Unit tests for publishers and subscribers. " alt="" coords="400,124,544,195"/>
+<area shape="rect" id="node5" href="$test__vision_8cpp.html" title="Unit test code for classifier class. " alt="" coords="568,124,712,195"/>
+</map>

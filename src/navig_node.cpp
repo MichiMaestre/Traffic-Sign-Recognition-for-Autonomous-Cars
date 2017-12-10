@@ -19,7 +19,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@copyright Copyright 2017 Miguel Maestre Trueba
  *@file navig_node.cpp
  *@author Miguel Maestre Trueba
- *@brief Navigation node
+ *@brief Navigation node where all the main functions of the robot behavious happen.
  */
 
 #include <string>
@@ -29,6 +29,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "robot.hpp"
 #include "traffic_sign_recognition/sign.h"
 
+
+/**
+ *@brief Function main that runs the main algorithm of the robot behavior.
+ *@brief It reads the messages published by the vision node using a ROS subscriber.
+ *@brief Depending on what type of sign has been recognized, different actions will be executed.
+ *@brief When the area of the detection is big enough and the sign classified, publish Twist messages to the robot.
+ *@param argc is the number of arguments.
+ *@param argv is the arguments characters array.
+ *@return 0
+ */
 int main(int argc, char **argv) {
     // Node creation
     ros::init(argc, argv, "robot");
@@ -38,20 +48,22 @@ int main(int argc, char **argv) {
     robot turtle;
     geometry_msgs::Twist velocity;
 
-    // Subscriber
+    // Custom message topic Subscriber
     ros::Subscriber sub = n.subscribe("/traffic",
         1, &robot::signCallback, &turtle);
 
-    // Publisher
+    // Velocity commands Publisher
     ros::Publisher pub = n.advertise<geometry_msgs::Twist>
         ("/cmd_vel_mux/input/teleop", 1000);
 
+    // Main algorithm starts
     ros::Rate loop_rate(10);
     while (ros::ok()) {
+        // Spin only when robot is not doing an action related traffic sign
         if (turtle.flag == false)
             ros::spinOnce();
 
-        // Publish velocity depending on type of sign
+        // Publish velocity depending on type of sign read in the message
         turtle.command(velocity, pub, loop_rate);
 
         loop_rate.sleep();

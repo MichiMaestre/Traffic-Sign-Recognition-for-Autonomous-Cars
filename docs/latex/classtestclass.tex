@@ -1,0 +1,80 @@
+\hypertarget{classtestclass}{}\section{testclass Class Reference}
+\label{classtestclass}\index{testclass@{testclass}}
+
+
+Definition of the testclass class. It contains mock callbacks to test publishers and subscribers.  
+
+
+
+
+{\ttfamily \#include $<$testclass.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classtestclass_ae352e9aa7c67eefb21fb59bbef70102d}{sign\+Callback} (traffic\+\_\+sign\+\_\+recognition\+::sign msg)
+\begin{DoxyCompactList}\small\item\em Velocity given to test subscriber. \end{DoxyCompactList}\item 
+void \hyperlink{classtestclass_adcd92913608e31a80dccd729a0d8b0d6}{vel\+Callback} (geometry\+\_\+msgs\+::\+Twist msg)
+\begin{DoxyCompactList}\small\item\em Callback used in tests to check if velocity is being published correctly. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+double {\bfseries area}\hypertarget{classtestclass_ab9124711e687a763fea6b8c055b76b2a}{}\label{classtestclass_ab9124711e687a763fea6b8c055b76b2a}
+
+\item 
+float \hyperlink{classtestclass_a32d677c7bed3b81b99c354761f4c175a}{type}\hypertarget{classtestclass_a32d677c7bed3b81b99c354761f4c175a}{}\label{classtestclass_a32d677c7bed3b81b99c354761f4c175a}
+
+\begin{DoxyCompactList}\small\item\em Area of the sign detection. \end{DoxyCompactList}\item 
+double \hyperlink{classtestclass_a587a4bcccbe19e230cea401a870dea43}{vel}\hypertarget{classtestclass_a587a4bcccbe19e230cea401a870dea43}{}\label{classtestclass_a587a4bcccbe19e230cea401a870dea43}
+
+\begin{DoxyCompactList}\small\item\em Type of sign detected. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Definition of the testclass class. It contains mock callbacks to test publishers and subscribers. 
+
+\subsection{Member Function Documentation}
+\index{testclass@{testclass}!sign\+Callback@{sign\+Callback}}
+\index{sign\+Callback@{sign\+Callback}!testclass@{testclass}}
+\subsubsection[{\texorpdfstring{sign\+Callback(traffic\+\_\+sign\+\_\+recognition\+::sign msg)}{signCallback(traffic_sign_recognition::sign msg)}}]{\setlength{\rightskip}{0pt plus 5cm}void testclass\+::sign\+Callback (
+\begin{DoxyParamCaption}
+\item[{traffic\+\_\+sign\+\_\+recognition\+::sign}]{msg}
+\end{DoxyParamCaption}
+)}\hypertarget{classtestclass_ae352e9aa7c67eefb21fb59bbef70102d}{}\label{classtestclass_ae352e9aa7c67eefb21fb59bbef70102d}
+
+
+Velocity given to test subscriber. 
+
+Callback used in tests to check if traffic topic is published correctly 
+\begin{DoxyParams}{Parameters}
+{\em msg} & is the custom message of type sign with traffic sign information \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+none 
+\end{DoxyReturn}
+\index{testclass@{testclass}!vel\+Callback@{vel\+Callback}}
+\index{vel\+Callback@{vel\+Callback}!testclass@{testclass}}
+\subsubsection[{\texorpdfstring{vel\+Callback(geometry\+\_\+msgs\+::\+Twist msg)}{velCallback(geometry_msgs::Twist msg)}}]{\setlength{\rightskip}{0pt plus 5cm}void testclass\+::vel\+Callback (
+\begin{DoxyParamCaption}
+\item[{geometry\+\_\+msgs\+::\+Twist}]{msg}
+\end{DoxyParamCaption}
+)}\hypertarget{classtestclass_adcd92913608e31a80dccd729a0d8b0d6}{}\label{classtestclass_adcd92913608e31a80dccd729a0d8b0d6}
+
+
+Callback used in tests to check if velocity is being published correctly. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & is Twist message with velocity type information \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+none 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/michi/catkin\+\_\+ws/src/traffic\+\_\+sign\+\_\+recognition/test/\hyperlink{testclass_8hpp}{testclass.\+hpp}\item 
+/home/michi/catkin\+\_\+ws/src/traffic\+\_\+sign\+\_\+recognition/test/\hyperlink{testclass_8cpp}{testclass.\+cpp}\end{DoxyCompactItemize}

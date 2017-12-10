@@ -1,0 +1,205 @@
+\hypertarget{classclassifier}{}\section{classifier Class Reference}
+\label{classclassifier}\index{classifier@{classifier}}
+
+
+Definition of the classifier class. It contains all the functions and variables depicted in the.  
+
+
+
+
+{\ttfamily \#include $<$classifier.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classclassifier_a08655fcec6411365a3838ac7c9cd2b19}{image\+Callback} (const sensor\+\_\+msgs\+::\+Image\+Const\+Ptr \&msg)
+\begin{DoxyCompactList}\small\item\em The label of the detections, outputed by the S\+VM. \end{DoxyCompactList}\item 
+cv\+::\+Mat \hyperlink{classclassifier_a8a7a42fa1bb806e639d23493d5c222d8}{de\+Noise} (cv\+::\+Mat input\+Image)
+\begin{DoxyCompactList}\small\item\em Apply gaussian filter to the input image to denoise it. \end{DoxyCompactList}\item 
+std\+::vector$<$ cv\+::\+Mat $>$ \hyperlink{classclassifier_a5b5bd9ecfd7fd622b742ee31fafd2f93}{M\+S\+E\+R\+\_\+\+Features} (cv\+::\+Mat img, double \&area)
+\begin{DoxyCompactList}\small\item\em Find M\+S\+ER features in the image. First normalize image and binarize, then look for regions and finally, resize each regions image. \end{DoxyCompactList}\item 
+cv\+::\+Mat \hyperlink{classclassifier_a162fa849e75034ee7e86b1081de8f3c3}{H\+O\+G\+\_\+\+Features} (cv\+::\+H\+O\+G\+Descriptor hog, std\+::vector$<$ cv\+::\+Mat $>$ imgs)
+\begin{DoxyCompactList}\small\item\em Compute the H\+OG features in every image of a vector. \end{DoxyCompactList}\item 
+int \hyperlink{classclassifier_af243db8f8ebd929c4cbe6ce9581b06c5}{train\+Stage} (cv\+::\+H\+O\+G\+Descriptor \&hog, cv\+::\+Ptr$<$ cv\+::ml\+::\+S\+VM $>$ \&svm, std\+::vector$<$ cv\+::\+Mat $>$ \&train\+Imgs, std\+::vector$<$ int $>$ \&train\+Labels)
+\begin{DoxyCompactList}\small\item\em Function that runs load\+Train\+Imgs(), \hyperlink{classclassifier_a162fa849e75034ee7e86b1081de8f3c3}{H\+O\+G\+\_\+\+Features()} and S\+VM Training, sequentially. \end{DoxyCompactList}\item 
+float \hyperlink{classclassifier_ac32914e9de8dc54ed6f803987bf24d25}{S\+V\+M\+Testing} (cv\+::\+Ptr$<$ cv\+::ml\+::\+S\+VM $>$ \&svm, cv\+::\+Mat test\+H\+OG)
+\begin{DoxyCompactList}\small\item\em Feed S\+VM with the H\+OG Matrix of the current image and outputs its label. \end{DoxyCompactList}\item 
+int \hyperlink{classclassifier_a6cc30b3645926233cbf880c8fa100536}{visualization} ()
+\begin{DoxyCompactList}\small\item\em Opens a vindow with the robot\textquotesingle{}s view of the workspace. It outputs bouding box around detected signs and the name of the sign. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+cv\+::\+Mat {\bfseries imagen}\hypertarget{classclassifier_a26cdea6917e91262aed520a607eff875}{}\label{classclassifier_a26cdea6917e91262aed520a607eff875}
+
+\item 
+std\+::vector$<$ cv\+::\+Rect $>$ \hyperlink{classclassifier_af8f673465c7e37684c3a28a90b8bdc00}{boxes}\hypertarget{classclassifier_af8f673465c7e37684c3a28a90b8bdc00}{}\label{classclassifier_af8f673465c7e37684c3a28a90b8bdc00}
+
+\begin{DoxyCompactList}\small\item\em Open\+CV Image from the camera given by the subscriber. \end{DoxyCompactList}\item 
+float \hyperlink{classclassifier_ac13295d3b350ef6c8219004666aeff18}{traffic\+\_\+sign}\hypertarget{classclassifier_ac13295d3b350ef6c8219004666aeff18}{}\label{classclassifier_ac13295d3b350ef6c8219004666aeff18}
+
+\begin{DoxyCompactList}\small\item\em Bounding boxes in the current frame. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Definition of the classifier class. It contains all the functions and variables depicted in the. 
+
+U\+ML Class diagram. It trains a S\+VM, reads images from topic, detects M\+S\+ER and H\+OG features and classifies traffic sign images. 
+
+\subsection{Member Function Documentation}
+\index{classifier@{classifier}!de\+Noise@{de\+Noise}}
+\index{de\+Noise@{de\+Noise}!classifier@{classifier}}
+\subsubsection[{\texorpdfstring{de\+Noise(cv\+::\+Mat input\+Image)}{deNoise(cv::Mat inputImage)}}]{\setlength{\rightskip}{0pt plus 5cm}cv\+::\+Mat classifier\+::de\+Noise (
+\begin{DoxyParamCaption}
+\item[{cv\+::\+Mat}]{input\+Image}
+\end{DoxyParamCaption}
+)}\hypertarget{classclassifier_a8a7a42fa1bb806e639d23493d5c222d8}{}\label{classclassifier_a8a7a42fa1bb806e639d23493d5c222d8}
+
+
+Apply gaussian filter to the input image to denoise it. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em input\+Image} & is the current image to be filtered \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Blurred and denoised image 
+\end{DoxyReturn}
+\index{classifier@{classifier}!H\+O\+G\+\_\+\+Features@{H\+O\+G\+\_\+\+Features}}
+\index{H\+O\+G\+\_\+\+Features@{H\+O\+G\+\_\+\+Features}!classifier@{classifier}}
+\subsubsection[{\texorpdfstring{H\+O\+G\+\_\+\+Features(cv\+::\+H\+O\+G\+Descriptor hog, std\+::vector$<$ cv\+::\+Mat $>$ imgs)}{HOG_Features(cv::HOGDescriptor hog, std::vector< cv::Mat > imgs)}}]{\setlength{\rightskip}{0pt plus 5cm}cv\+::\+Mat classifier\+::\+H\+O\+G\+\_\+\+Features (
+\begin{DoxyParamCaption}
+\item[{cv\+::\+H\+O\+G\+Descriptor}]{hog, }
+\item[{std\+::vector$<$ cv\+::\+Mat $>$}]{imgs}
+\end{DoxyParamCaption}
+)}\hypertarget{classclassifier_a162fa849e75034ee7e86b1081de8f3c3}{}\label{classclassifier_a162fa849e75034ee7e86b1081de8f3c3}
+
+
+Compute the H\+OG features in every image of a vector. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em hog} & is the H\+OG Descriptor object with all the parameters set up \\
+\hline
+{\em imgs} & is the vector of images to get the\+H\+OG from \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Matrix with the H\+OG Descriptor for all the images. 
+\end{DoxyReturn}
+\index{classifier@{classifier}!image\+Callback@{image\+Callback}}
+\index{image\+Callback@{image\+Callback}!classifier@{classifier}}
+\subsubsection[{\texorpdfstring{image\+Callback(const sensor\+\_\+msgs\+::\+Image\+Const\+Ptr \&msg)}{imageCallback(const sensor_msgs::ImageConstPtr &msg)}}]{\setlength{\rightskip}{0pt plus 5cm}void classifier\+::image\+Callback (
+\begin{DoxyParamCaption}
+\item[{const sensor\+\_\+msgs\+::\+Image\+Const\+Ptr \&}]{msg}
+\end{DoxyParamCaption}
+)}\hypertarget{classclassifier_a08655fcec6411365a3838ac7c9cd2b19}{}\label{classclassifier_a08655fcec6411365a3838ac7c9cd2b19}
+
+
+The label of the detections, outputed by the S\+VM. 
+
+Callback used in the subscriber for the camera topic. Gets the R\+OS Img msg and transforms it to an Open\+CV img. 
+\begin{DoxyParams}{Parameters}
+{\em msg} & is the R\+OS Image msg \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+none 
+\end{DoxyReturn}
+\index{classifier@{classifier}!M\+S\+E\+R\+\_\+\+Features@{M\+S\+E\+R\+\_\+\+Features}}
+\index{M\+S\+E\+R\+\_\+\+Features@{M\+S\+E\+R\+\_\+\+Features}!classifier@{classifier}}
+\subsubsection[{\texorpdfstring{M\+S\+E\+R\+\_\+\+Features(cv\+::\+Mat img, double \&area)}{MSER_Features(cv::Mat img, double &area)}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$ cv\+::\+Mat $>$ classifier\+::\+M\+S\+E\+R\+\_\+\+Features (
+\begin{DoxyParamCaption}
+\item[{cv\+::\+Mat}]{img, }
+\item[{double \&}]{area}
+\end{DoxyParamCaption}
+)}\hypertarget{classclassifier_a5b5bd9ecfd7fd622b742ee31fafd2f93}{}\label{classclassifier_a5b5bd9ecfd7fd622b742ee31fafd2f93}
+
+
+Find M\+S\+ER features in the image. First normalize image and binarize, then look for regions and finally, resize each regions image. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em img} & is the current image where M\+S\+ER features are detected \\
+\hline
+{\em area} & is an output variable that stores the area of each region\textquotesingle{}s bounding box \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Vector of all the images of detections 
+\end{DoxyReturn}
+\index{classifier@{classifier}!S\+V\+M\+Testing@{S\+V\+M\+Testing}}
+\index{S\+V\+M\+Testing@{S\+V\+M\+Testing}!classifier@{classifier}}
+\subsubsection[{\texorpdfstring{S\+V\+M\+Testing(cv\+::\+Ptr$<$ cv\+::ml\+::\+S\+V\+M $>$ \&svm, cv\+::\+Mat test\+H\+O\+G)}{SVMTesting(cv::Ptr< cv::ml::SVM > &svm, cv::Mat testHOG)}}]{\setlength{\rightskip}{0pt plus 5cm}float classifier\+::\+S\+V\+M\+Testing (
+\begin{DoxyParamCaption}
+\item[{cv\+::\+Ptr$<$ cv\+::ml\+::\+S\+VM $>$ \&}]{svm, }
+\item[{cv\+::\+Mat}]{test\+H\+OG}
+\end{DoxyParamCaption}
+)}\hypertarget{classclassifier_ac32914e9de8dc54ed6f803987bf24d25}{}\label{classclassifier_ac32914e9de8dc54ed6f803987bf24d25}
+
+
+Feed S\+VM with the H\+OG Matrix of the current image and outputs its label. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em test\+H\+OG} & is the H\+OG Descriptor object with all the parameters set up \\
+\hline
+{\em svm} & is the Support vector Machine object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Labels of the tested set of features. Label of the sign being recognized. 
+\end{DoxyReturn}
+\index{classifier@{classifier}!train\+Stage@{train\+Stage}}
+\index{train\+Stage@{train\+Stage}!classifier@{classifier}}
+\subsubsection[{\texorpdfstring{train\+Stage(cv\+::\+H\+O\+G\+Descriptor \&hog, cv\+::\+Ptr$<$ cv\+::ml\+::\+S\+V\+M $>$ \&svm, std\+::vector$<$ cv\+::\+Mat $>$ \&train\+Imgs, std\+::vector$<$ int $>$ \&train\+Labels)}{trainStage(cv::HOGDescriptor &hog, cv::Ptr< cv::ml::SVM > &svm, std::vector< cv::Mat > &trainImgs, std::vector< int > &trainLabels)}}]{\setlength{\rightskip}{0pt plus 5cm}int classifier\+::train\+Stage (
+\begin{DoxyParamCaption}
+\item[{cv\+::\+H\+O\+G\+Descriptor \&}]{hog, }
+\item[{cv\+::\+Ptr$<$ cv\+::ml\+::\+S\+VM $>$ \&}]{svm, }
+\item[{std\+::vector$<$ cv\+::\+Mat $>$ \&}]{train\+Imgs, }
+\item[{std\+::vector$<$ int $>$ \&}]{train\+Labels}
+\end{DoxyParamCaption}
+)}\hypertarget{classclassifier_af243db8f8ebd929c4cbe6ce9581b06c5}{}\label{classclassifier_af243db8f8ebd929c4cbe6ce9581b06c5}
+
+
+Function that runs load\+Train\+Imgs(), \hyperlink{classclassifier_a162fa849e75034ee7e86b1081de8f3c3}{H\+O\+G\+\_\+\+Features()} and S\+VM Training, sequentially. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em hog} & is the H\+OG Descriptor object with all the parameters set up \\
+\hline
+{\em svm} & is the Support vector Machine object \\
+\hline
+{\em train\+Imgs} & is an output vector that contains all the training images \\
+\hline
+{\em train\+Labels} & is an output vector that contains all the labels of the training images \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if success 
+\end{DoxyReturn}
+\index{classifier@{classifier}!visualization@{visualization}}
+\index{visualization@{visualization}!classifier@{classifier}}
+\subsubsection[{\texorpdfstring{visualization()}{visualization()}}]{\setlength{\rightskip}{0pt plus 5cm}int classifier\+::visualization (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{classclassifier_a6cc30b3645926233cbf880c8fa100536}{}\label{classclassifier_a6cc30b3645926233cbf880c8fa100536}
+
+
+Opens a vindow with the robot\textquotesingle{}s view of the workspace. It outputs bouding box around detected signs and the name of the sign. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if success 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/michi/catkin\+\_\+ws/src/traffic\+\_\+sign\+\_\+recognition/include/\hyperlink{classifier_8hpp}{classifier.\+hpp}\item 
+/home/michi/catkin\+\_\+ws/src/traffic\+\_\+sign\+\_\+recognition/src/\hyperlink{classifier_8cpp}{classifier.\+cpp}\end{DoxyCompactItemize}

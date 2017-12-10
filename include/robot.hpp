@@ -19,7 +19,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@copyright Copyright 2017 Miguel Maestre Trueba
  *@file robot.hpp
  *@author Miguel Maestre Trueba
- *@brief Header file for class robot
+ *@brief Header file with definitions for class robot.
  */
 
 #pragma once
@@ -31,14 +31,29 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class robot {
  private:
-    int count = 0;
+    int count = 0;  /// Counter used to get number of signs found in the world
 
  public:
-    bool flag;
-    float type;
-    double area;
+    bool flag;  /// Signal that tells node when to spin and when to stop
+    float type;  /// Type of traffic sign being recognized
+    double area;  /// Size of the bouding box of the detected traffic sign
+
+    /// SIGN MSG CALLBACK
+    /**
+     *@brief Callback used in the subscriber for the traffic topic. Gets the message and stores its info in the classes variables
+     *@param msg is the custom sign message. Contains type of sign and its size in the image
+     *@return none
+     */
     void signCallback(traffic_sign_recognition::sign msg);
 
+    // ROBOT BEHAVIOR
+    /**
+     *@brief Publishes velocity commands for a certain time depending on what type of sign has been detected
+     *@param velocity is the Twist() message that has to be published
+     *@param pub is publisher to "/cmd_vel_mux/input/teleop" topic
+     *@param loop_rate is a ros::Rate of 10 ms
+     *@return none
+     */
     void command(geometry_msgs::Twist &velocity,
         ros::Publisher &pub, ros::Rate &loop_rate);
 };

@@ -1,0 +1,74 @@
+\hypertarget{classrobot}{}\section{robot Class Reference}
+\label{classrobot}\index{robot@{robot}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classrobot_ae75398439047ff01b4862f94f024e1bd}{sign\+Callback} (traffic\+\_\+sign\+\_\+recognition\+::sign msg)
+\begin{DoxyCompactList}\small\item\em Size of the bouding box of the detected traffic sign. \end{DoxyCompactList}\item 
+void \hyperlink{classrobot_af8555fa2112c06bf201122bfe2a9e290}{command} (geometry\+\_\+msgs\+::\+Twist \&velocity, ros\+::\+Publisher \&pub, ros\+::\+Rate \&loop\+\_\+rate)
+\begin{DoxyCompactList}\small\item\em Publishes velocity commands for a certain time depending on what type of sign has been detected. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{classrobot_a05155d037030c16510607ef4efb69cfb}{flag}\hypertarget{classrobot_a05155d037030c16510607ef4efb69cfb}{}\label{classrobot_a05155d037030c16510607ef4efb69cfb}
+
+\begin{DoxyCompactList}\small\item\em Counter used to get number of signs found in the world. \end{DoxyCompactList}\item 
+float \hyperlink{classrobot_a187cfd9e3acf8fa728d667aada0c9fa9}{type}\hypertarget{classrobot_a187cfd9e3acf8fa728d667aada0c9fa9}{}\label{classrobot_a187cfd9e3acf8fa728d667aada0c9fa9}
+
+\begin{DoxyCompactList}\small\item\em Signal that tells node when to spin and when to stop. \end{DoxyCompactList}\item 
+double \hyperlink{classrobot_a45ef84659871b1b8a252a8d8a849f256}{area}\hypertarget{classrobot_a45ef84659871b1b8a252a8d8a849f256}{}\label{classrobot_a45ef84659871b1b8a252a8d8a849f256}
+
+\begin{DoxyCompactList}\small\item\em Type of traffic sign being recognized. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\index{robot@{robot}!command@{command}}
+\index{command@{command}!robot@{robot}}
+\subsubsection[{\texorpdfstring{command(geometry\+\_\+msgs\+::\+Twist \&velocity, ros\+::\+Publisher \&pub, ros\+::\+Rate \&loop\+\_\+rate)}{command(geometry_msgs::Twist &velocity, ros::Publisher &pub, ros::Rate &loop_rate)}}]{\setlength{\rightskip}{0pt plus 5cm}void robot\+::command (
+\begin{DoxyParamCaption}
+\item[{geometry\+\_\+msgs\+::\+Twist \&}]{velocity, }
+\item[{ros\+::\+Publisher \&}]{pub, }
+\item[{ros\+::\+Rate \&}]{loop\+\_\+rate}
+\end{DoxyParamCaption}
+)}\hypertarget{classrobot_af8555fa2112c06bf201122bfe2a9e290}{}\label{classrobot_af8555fa2112c06bf201122bfe2a9e290}
+
+
+Publishes velocity commands for a certain time depending on what type of sign has been detected. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em velocity} & is the Twist() message that has to be published \\
+\hline
+{\em pub} & is publisher to \char`\"{}/cmd\+\_\+vel\+\_\+mux/input/teleop\char`\"{} topic \\
+\hline
+{\em loop\+\_\+rate} & is a ros\+::\+Rate of 10 ms \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+none 
+\end{DoxyReturn}
+\index{robot@{robot}!sign\+Callback@{sign\+Callback}}
+\index{sign\+Callback@{sign\+Callback}!robot@{robot}}
+\subsubsection[{\texorpdfstring{sign\+Callback(traffic\+\_\+sign\+\_\+recognition\+::sign msg)}{signCallback(traffic_sign_recognition::sign msg)}}]{\setlength{\rightskip}{0pt plus 5cm}void robot\+::sign\+Callback (
+\begin{DoxyParamCaption}
+\item[{traffic\+\_\+sign\+\_\+recognition\+::sign}]{msg}
+\end{DoxyParamCaption}
+)}\hypertarget{classrobot_ae75398439047ff01b4862f94f024e1bd}{}\label{classrobot_ae75398439047ff01b4862f94f024e1bd}
+
+
+Size of the bouding box of the detected traffic sign. 
+
+S\+I\+GN M\+SG C\+A\+L\+L\+B\+A\+CK Callback used in the subscriber for the traffic topic. Gets the message and stores its info in the classes variables 
+\begin{DoxyParams}{Parameters}
+{\em msg} & is the custom sign message. Contains type of sign and its size in the image \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+none 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/michi/catkin\+\_\+ws/src/traffic\+\_\+sign\+\_\+recognition/include/\hyperlink{robot_8hpp}{robot.\+hpp}\item 
+/home/michi/catkin\+\_\+ws/src/traffic\+\_\+sign\+\_\+recognition/src/\hyperlink{robot_8cpp}{robot.\+cpp}\end{DoxyCompactItemize}

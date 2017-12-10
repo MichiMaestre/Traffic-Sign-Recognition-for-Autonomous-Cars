@@ -1,19 +1,19 @@
 Checking src/classifier.cpp...
-1/8 files checked 22% done
+1/8 files checked 20% done
 Checking src/navig_node.cpp...
-2/8 files checked 29% done
+2/8 files checked 27% done
 Checking src/robot.cpp...
-3/8 files checked 43% done
+3/8 files checked 41% done
 Checking src/vision_node.cpp...
-[src/vision_node.cpp:76]: (style) Variable 'trained' is assigned a value that is never used.
-[src/vision_node.cpp:101]: (style) Variable 'flagviz' is assigned a value that is never used.
-4/8 files checked 54% done
+[src/vision_node.cpp:84]: (style) Variable 'trained' is assigned a value that is never used.
+[src/vision_node.cpp:112]: (style) Variable 'flagviz' is assigned a value that is never used.
+4/8 files checked 51% done
 Checking test/test_robot.cpp...
-5/8 files checked 62% done
+5/8 files checked 60% done
 Checking test/test_ros.cpp...
-6/8 files checked 72% done
+6/8 files checked 70% done
 Checking test/test_vision.cpp...
-7/8 files checked 94% done
+7/8 files checked 95% done
 Checking test/testclass.cpp...
 8/8 files checked 100% done
 (information) Cppcheck cannot find all the include files (use --check-config for details)

@@ -19,7 +19,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@copyright Copyright 2017 Miguel Maestre Trueba
  *@file classifier.cpp
  *@author Miguel Maestre Trueba
- *@brief Class classifier definition code
+ *@brief Implementation of the methods of class classifier.
+ *@brief These methods are in charge of receiving images and detecting and classifying signs in the images.
  */
 
 #include <cv_bridge/cv_bridge.h>
@@ -30,11 +31,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "opencv2/opencv.hpp"
 #include "ros/console.h"
 #include "classifier.hpp"
-// #include "../../../src/traffic_sign_recognition/Training_Images/*"
 
 
 void classifier::imageCallback(const sensor_msgs::ImageConstPtr& msg) {
     cv_bridge::CvImagePtr cv_ptr;
+    // Convert from ROS Image msg to OpenCV image
     try {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
         imagen = cv_ptr->image;
@@ -48,7 +49,7 @@ void classifier::imageCallback(const sensor_msgs::ImageConstPtr& msg) {
 
 cv::Mat classifier::deNoise(cv::Mat inputImage) {
     cv::Mat output;
-
+    // Apply gaussian filter to denoise image
     cv::GaussianBlur(inputImage, output, cv::Size(3, 3), 0, 0);
 
     return output;
@@ -62,7 +63,7 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img, double &area) {
     cv::Size size(64, 64);
     std::vector<cv::Mat> detections;
 
-    // Get normalized images with Red and Blue
+    // Normalize images with respect to Red and Blue and binarize
     split(img, bgr);
 
     cv::Mat red_norm = 255*(bgr[2] / (bgr[0] + bgr[1] + bgr[2]));
@@ -76,13 +77,14 @@ std::vector<cv::Mat> classifier::MSER_Features(cv::Mat img, double &area) {
 
     threshold(red_blue, rb_binary, 200, 255, cv::THRESH_BINARY);
 
-    // MSER
+    // MSER regions detection
     cv::Ptr<cv::MSER> ms = cv::MSER::create(50, 1000, 14400, 0.9,
         0.1, 200, 1.01, 0.1, 1);
     std::vector<std::vector<cv::Point> > regions;
     std::vector<cv::Rect> mser_bbox;
     ms->detectRegions(rb_binary, regions, mser_bbox);
 
+    // For every bounding box in the image
     for (cv::Rect i : mser_bbox) {
         // Ratio filter of detected regions
         double ratio = (static_cast<double>(i.height) /
@@ -109,13 +111,14 @@ cv::Mat classifier::HOG_Features(cv::HOGDescriptor hog,
     std::vector<cv::Mat> imgs) {
     std::vector<std::vector<float> > HOG;
 
+    // For all of the images of the vector, compute HOG features
     for (cv::Mat i : imgs) {
         std::vector<float> descriptor;
         hog.compute(i, descriptor);
         HOG.push_back(descriptor);
     }
 
-    // Convert HOG features vector to Matrix
+    // Convert HOG features vector to Matrix for the SVM
     cv::Mat signMat(HOG.size(), HOG[0].size(), CV_32FC1);
     auto i = 0;
     while (i < HOG.size()) {
@@ -131,12 +134,12 @@ cv::Mat classifier::HOG_Features(cv::HOGDescriptor hog,
 
 void classifier::loadTrainingImgs(std::vector<cv::Mat> &trainImgs,
     std::vector<int> &trainLabels) {
+    // Load all the forward signs images from dataset and label them
     cv::String pathname = "./Training_Images/1";
     std::vector<cv::String> filenames;
     cv::glob(pathname, filenames);
     cv::Size size(64, 64);
 
-    // std::cout << filenames.size() << std::endl;
     for (cv::String i : filenames) {
         cv::Mat src = imread(i);
 
@@ -145,12 +148,12 @@ void classifier::loadTrainingImgs(std::vector<cv::Mat> &trainImgs,
         trainLabels.push_back(1);
     }
 
+    // Load all the turn signs images from dataset and label them
     cv::String pathname2 = "./Training_Images/2";
     std::vector<cv::String> filenames2;
     cv::glob(pathname2, filenames2);
     cv::Size size2(64, 64);
 
-    // std::cout << filenames.size() << std::endl;
     for (cv::String i : filenames2) {
         cv::Mat src2 = imread(i);
 
@@ -159,12 +162,12 @@ void classifier::loadTrainingImgs(std::vector<cv::Mat> &trainImgs,
         trainLabels.push_back(2);
     }
 
+    // Load all the stop signs images from dataset and label them
     cv::String pathname3 = "./Training_Images/3";
     std::vector<cv::String> filenames3;
     cv::glob(pathname3, filenames3);
     cv::Size size3(64, 64);
 
-    // std::cout << filenames.size() << std::endl;
     for (cv::String i : filenames3) {
         cv::Mat src3 = imread(i);
 
@@ -176,11 +179,13 @@ void classifier::loadTrainingImgs(std::vector<cv::Mat> &trainImgs,
 
 void classifier::SVMTraining(cv::Ptr<cv::ml::SVM> &svm, cv::Mat trainHOG,
     std::vector<int> trainLabels) {
-    // Set parameters
+    // Set parameters of the SVM
     svm->setGamma(0.50625);
     svm->setC(12.5);
     svm->setKernel(cv::ml::SVM::RBF);
     svm->setType(cv::ml::SVM::C_SVC);
+
+    // Feed SVM with all the labeled data and train it
     cv::Ptr<cv::ml::TrainData> td = cv::ml::TrainData::create(trainHOG,
         cv::ml::ROW_SAMPLE, trainLabels);
     svm->train(td);
@@ -207,8 +212,10 @@ int classifier::trainStage(cv::HOGDescriptor &hog, cv::Ptr<cv::ml::SVM> &svm,
 float classifier::SVMTesting(cv::Ptr<cv::ml::SVM> &svm, cv::Mat testHOG) {
     cv::Mat answer;
 
+    // Feed SVM with HOG features from detections and label it
     svm->predict(testHOG, answer);
 
+    // Return the label of the detection
     auto i = 0;
     while (i < answer.rows) {
         this->traffic_sign = answer.at<float>(i, 0);
@@ -223,6 +230,7 @@ int classifier::visualization() {
     cv::putText(viz, "Robot View", cv::Point(10, 30),
         cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 0, 255));
 
+    // For all the signs in the image, print bounding box and type of sign
     for (cv::Rect i : this->boxes) {
         cv::rectangle(viz, i, CV_RGB(50, 200, 0), 2);
         if (this->traffic_sign == 1) {

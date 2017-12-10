@@ -17,9 +17,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *
  *@copyright Copyright 2017 Miguel Maestre Trueba
- *@file classifier.hpp
+ *@file testclass.hpp
  *@author Miguel Maestre Trueba
- *@brief Header file for class classifier
+ *@brief Definition for class testclass
  */
 
 #pragma once
@@ -32,12 +32,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ros/ros.h"
 #include "traffic_sign_recognition/sign.h"
 
+/**
+ *@brief Definition of the testclass class. It contains mock callbacks to test publishers and subscribers. 
+ */
 class testclass {
  public:
-    double area;
-    float type;
-    double vel;
+    double area;  /// Area of the sign detection
+    float type;  /// Type of sign detected
+    double vel;  /// Velocity given to test subscriber
+
+    /**
+     *@brief Callback used in tests to check if traffic topic is published correctly
+     *@param msg is the custom message of type sign with traffic sign information
+     *@return none
+     */
     void signCallback(traffic_sign_recognition::sign msg);
 
+    /**
+     *@brief Callback used in tests to check if velocity is being published correctly
+     *@param msg is Twist message with velocity type information
+     *@return none
+     */
     void velCallback(geometry_msgs::Twist msg);
 };
