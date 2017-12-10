@@ -5,11 +5,37 @@
 
 ## Overview
 
+The objective of this project was to design and develop a traffic sign recognition algorithm  for autonomous vehicles applications. The self driving car market is growing at a very fast pace. Many companies are working in this problem trying to solve every aspect of it, so that autonomous cars can drive safely on the roads. It is a very complex problem due to the many aspects that it relies on: robotics, path planning, navigation, computer vision, mechanics, etc.
+
+This project is focused mainly in the computer vision aspect of it, a crucial module. If an automated car is going to drive around unpredictable environments, it has to be able to perceive and detect every small detail that surrounds it. Since tests were needed, the algorithm ewas developed using ROS and tested in a robot. The chosen robot is a Turtlebot 2. 
+
+The robot will be driving around a simulated world, searching for traffic signs with its camera. Any time a traffic sign is recognized, the vision algorithm will send to the robot a command on how does it have to react to that sign. For example, if the robot finds a "turn left" sign, it will sop in from of the sign and turn to the left instead of continue going forward or turning to another direction. 
+
+The project was developed using ROS Kinetic, C++ and OpenCV 3.2.0. The following subsection of the Overview will explain the pipeline of the algorithm step by step.
+
+## Algorithm
+
+The simulated world was designed using Gazebo. It simulates a map with delimited roads and a few traffic signs so that the robot's behavior can be tested.
+![world](...)
+
+The proposed algorithm follows a straight forward pipeline with several steps as shown in the following activity diagrams. A Support Vector Machine (SVM) was used to classify the signs, so the first activity diagram corresponds to the training of the SVM.
+ 
+![activity_train](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/UML/revised/Training_ActivityUML_revised.png)
+
+The second diagram describes the main algorithm of the project. It involves two different ROS nodes that communicate between each other using a custom message, defined in the msg directory of the repository. ROS publishers and subscribers were used. 
+
+![activity_main](...)
+
+Explain how training was done, show example of couple of trasining images...
+
+Results of the main algorithm, outputted from robot view...
+
+
 ## Solo Iterative Process
 
 Since this is a single programmer project, the Solo Iterative Process (SIP) is used to manage it. A product backlog, iteration backlog and work log(time log and code defect log) are used as structure of the whole project. The following link contains these logs. They will be updated through the whole development of the project.
 
-https://docs.google.com/spreadsheets/d/1DNZGOJKaiTatEUviT9Bw6kG5VXIltuus_LCciD0hvZM/edit#gid=756841136
+[SIP Logs](https://docs.google.com/spreadsheets/d/1DNZGOJKaiTatEUviT9Bw6kG5VXIltuus_LCciD0hvZM/edit#gid=756841136)
 
 The project will consist of three iterations:
 
@@ -21,8 +47,32 @@ The project will consist of three iterations:
 
 ## Sprint Planning
 
-https://docs.google.com/a/terpmail.umd.edu/document/d/1WolcIaDy4VU08c1Y5FMh5BDelXJmd_aV6ZwrNPDOnlo/edit?usp=sharing
+[Sprint Planning Notes](https://docs.google.com/a/terpmail.umd.edu/document/d/1WolcIaDy4VU08c1Y5FMh5BDelXJmd_aV6ZwrNPDOnlo/edit?usp=sharing)
 
+## Dependencies
+
+* Ubuntu 16.04
+* ROS Kinetic
+* Catkin
+* Gazebo
+* Turtlebot Gazebo package
+* Packages included in ROS Kinetic:
+	* roscpp
+	* std_msgs
+	* genmsg
+	* geometry_msgs
+	* OpenCV3 (standard version included in ROS Kinetic, no need to install other version)
+	* cv_bridge
+
+## How to build
+
+## How to run
+
+## Testing
+
+## Record a bag file
+
+## Known issues/bugs
 
 ## License
 
