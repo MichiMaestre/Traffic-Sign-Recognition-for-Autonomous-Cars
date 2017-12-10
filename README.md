@@ -16,7 +16,7 @@ The project was developed using ROS Kinetic, C++ and OpenCV 3.2.0. The following
 ## Algorithm
 
 The simulated world was designed using Gazebo. It simulates a map with delimited roads and a few traffic signs so that the robot's behavior can be tested.
-![world](...)
+![world](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/Images/rsz_world_view.png)
 
 The proposed algorithm follows a straight forward pipeline with several steps as shown in the following activity diagrams. A Support Vector Machine (SVM) was used to classify the signs, so the first activity diagram corresponds to the training of the SVM.
  
@@ -24,11 +24,20 @@ The proposed algorithm follows a straight forward pipeline with several steps as
 
 The second diagram describes the main algorithm of the project. It involves two different ROS nodes that communicate between each other using a custom message, defined in the msg directory of the repository. ROS publishers and subscribers were used. 
 
-![activity_main](...)
+![activity_main](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/UML/revised/Main_ActivityUML_Revised.png)
 
+### Training and testing traffic signs
 Explain how training was done, show example of couple of trasining images...
 
+![stop](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/Images/Training_Images/3/00546_00002.ppm)
+
+![turn](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/Images/Training_Images/2/00031_00001.ppm)
+
 Results of the main algorithm, outputted from robot view...
+
+![robot_view1](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/Images/robot_view1.png)
+
+![robot_view2](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/Images/robot_view2.png)
 
 
 ## Solo Iterative Process
