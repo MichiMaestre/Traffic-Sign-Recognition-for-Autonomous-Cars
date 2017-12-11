@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - src/navig_node.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - navig_node.cpp<span style="font-size: 80%;"> (source / <a href="navig_node.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2017-12-10 20:13:53</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /** MIT License</a>
+<span class="lineNum">       2 </span>            : Copyright (c) 2017 Miguel Maestre Trueba
+<span class="lineNum">       3 </span>            : Permission is hereby granted, free of charge, to any person obtaining a copy
+<span class="lineNum">       4 </span>            : of this software and associated documentation files (the &quot;Software&quot;), to deal
+<span class="lineNum">       5 </span>            : in the Software without restriction, including without limitation the rights
+<span class="lineNum">       6 </span>            : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+<span class="lineNum">       7 </span>            : copies of the Software, and to permit persons to whom the Software is
+<span class="lineNum">       8 </span>            : furnished to do so, subject to the following conditions:
+<span class="lineNum">       9 </span>            : The above copyright notice and this permission notice shall be included in all
+<span class="lineNum">      10 </span>            : copies or substantial portions of the Software.
+<span class="lineNum">      11 </span>            : THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+<span class="lineNum">      12 </span>            : IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+<span class="lineNum">      13 </span>            : FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+<span class="lineNum">      14 </span>            : AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+<span class="lineNum">      15 </span>            : WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+<span class="lineNum">      16 </span>            : CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+<span class="lineNum">      17 </span>            :  *
+<span class="lineNum">      18 </span>            :  *
+<span class="lineNum">      19 </span>            :  *@copyright Copyright 2017 Miguel Maestre Trueba
+<span class="lineNum">      20 </span>            :  *@file navig_node.cpp
+<span class="lineNum">      21 </span>            :  *@author Miguel Maestre Trueba
+<span class="lineNum">      22 </span>            :  *@brief Navigation node where all the main functions of the robot behavious happen.
+<span class="lineNum">      23 </span>            :  */
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : #include &lt;string&gt;
+<span class="lineNum">      26 </span>            : #include &lt;cstdlib&gt;
+<span class="lineNum">      27 </span>            : #include &quot;ros/ros.h&quot;
+<span class="lineNum">      28 </span>            : #include &quot;ros/console.h&quot;
+<span class="lineNum">      29 </span>            : #include &quot;robot.hpp&quot;
+<span class="lineNum">      30 </span>            : #include &quot;traffic_sign_recognition/sign.h&quot;
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : /**
+<span class="lineNum">      34 </span>            :  *@brief Function main that runs the main algorithm of the robot behavior.
+<span class="lineNum">      35 </span>            :  *@brief It reads the messages published by the vision node using a ROS subscriber.
+<span class="lineNum">      36 </span>            :  *@brief Depending on what type of sign has been recognized, different actions will be executed.
+<span class="lineNum">      37 </span>            :  *@brief When the area of the detection is big enough and the sign classified, publish Twist messages to the robot.
+<span class="lineNum">      38 </span>            :  *@param argc is the number of arguments.
+<span class="lineNum">      39 </span>            :  *@param argv is the arguments characters array.
+<a name="40"><span class="lineNum">      40 </span>            :  *@return 0</a>
+<span class="lineNum">      41 </span>            :  */
+<span class="lineNum">      42 </span><span class="lineCov">          5 : int main(int argc, char **argv) {</span>
+<span class="lineNum">      43 </span>            :     // Node creation
+<span class="lineNum">      44 </span><span class="lineCov">          5 :     ros::init(argc, argv, &quot;robot&quot;);</span>
+<span class="lineNum">      45 </span><span class="lineCov">         10 :     ros::NodeHandle n;</span>
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            :     // Initializations
+<span class="lineNum">      48 </span><span class="lineCov">          5 :     robot turtle;</span>
+<span class="lineNum">      49 </span><span class="lineCov">          5 :     geometry_msgs::Twist velocity;</span>
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            :     // Custom message topic Subscriber
+<span class="lineNum">      52 </span>            :     ros::Subscriber sub = n.subscribe(&quot;/traffic&quot;,
+<span class="lineNum">      53 </span><span class="lineCov">         10 :         1, &amp;robot::signCallback, &amp;turtle);</span>
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            :     // Velocity commands Publisher
+<span class="lineNum">      56 </span>            :     ros::Publisher pub = n.advertise&lt;geometry_msgs::Twist&gt;
+<span class="lineNum">      57 </span><span class="lineCov">         10 :         (&quot;/cmd_vel_mux/input/teleop&quot;, 1000);</span>
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            :     // Main algorithm starts
+<span class="lineNum">      60 </span><span class="lineCov">         10 :     ros::Rate loop_rate(10);</span>
+<span class="lineNum">      61 </span><span class="lineCov">       2833 :     while (ros::ok()) {</span>
+<span class="lineNum">      62 </span>            :         // Spin only when robot is not doing an action related traffic sign
+<span class="lineNum">      63 </span><span class="lineCov">       1414 :         if (turtle.flag == false)</span>
+<span class="lineNum">      64 </span><span class="lineCov">       1414 :             ros::spinOnce();</span>
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            :         // Publish velocity depending on type of sign read in the message
+<span class="lineNum">      67 </span><span class="lineCov">       1414 :         turtle.command(velocity, pub, loop_rate);</span>
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span><span class="lineCov">       1414 :         loop_rate.sleep();</span>
+<a name="70"><span class="lineNum">      70 </span>            :     }</a>
+<span class="lineNum">      71 </span><span class="lineCov">          5 :     return 0;</span>
+<span class="lineNum">      72 </span><span class="lineCov">         15 : }</span>
+<span class="lineNum">      73 </span>            : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

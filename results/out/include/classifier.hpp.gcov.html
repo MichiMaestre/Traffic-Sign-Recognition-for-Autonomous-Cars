@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - include/classifier.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">include</a> - classifier.hpp<span style="font-size: 80%;"> (source / <a href="classifier.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2017-12-10 20:13:53</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /** MIT License</a>
+<span class="lineNum">       2 </span>            : Copyright (c) 2017 Miguel Maestre Trueba
+<span class="lineNum">       3 </span>            : Permission is hereby granted, free of charge, to any person obtaining a copy
+<span class="lineNum">       4 </span>            : of this software and associated documentation files (the &quot;Software&quot;), to deal
+<span class="lineNum">       5 </span>            : in the Software without restriction, including without limitation the rights
+<span class="lineNum">       6 </span>            : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+<span class="lineNum">       7 </span>            : copies of the Software, and to permit persons to whom the Software is
+<span class="lineNum">       8 </span>            : furnished to do so, subject to the following conditions:
+<span class="lineNum">       9 </span>            : The above copyright notice and this permission notice shall be included in all
+<span class="lineNum">      10 </span>            : copies or substantial portions of the Software.
+<span class="lineNum">      11 </span>            : THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+<span class="lineNum">      12 </span>            : IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+<span class="lineNum">      13 </span>            : FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+<span class="lineNum">      14 </span>            : AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+<span class="lineNum">      15 </span>            : WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+<span class="lineNum">      16 </span>            : CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+<span class="lineNum">      17 </span>            :  *
+<span class="lineNum">      18 </span>            :  *
+<span class="lineNum">      19 </span>            :  *@copyright Copyright 2017 Miguel Maestre Trueba
+<span class="lineNum">      20 </span>            :  *@file classifier.hpp
+<span class="lineNum">      21 </span>            :  *@author Miguel Maestre Trueba
+<span class="lineNum">      22 </span>            :  *@brief Header file with definitions for class classifier.
+<span class="lineNum">      23 </span>            :  */
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : #pragma once
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : #include &lt;cv_bridge/cv_bridge.h&gt;
+<span class="lineNum">      28 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      29 </span>            : #include &lt;opencv2/highgui/highgui.hpp&gt;
+<span class="lineNum">      30 </span>            : #include &quot;opencv2/opencv.hpp&quot;
+<span class="lineNum">      31 </span>            : #include &quot;ros/ros.h&quot;
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : /**
+<span class="lineNum">      34 </span>            :  *@brief Definition of the classifier class. It contains all the functions and variables depicted in the
+<span class="lineNum">      35 </span>            :  *@brief UML Class diagram.
+<a name="36"><span class="lineNum">      36 </span>            :  *@brief It trains a SVM, reads images from topic, detects MSER and HOG features and classifies traffic sign images.</a>
+<span class="lineNum">      37 </span>            :  */
+<span class="lineNum">      38 </span><span class="lineCov">         28 : class classifier {</span>
+<span class="lineNum">      39 </span>            :  private:
+<span class="lineNum">      40 </span>            :     // DATASET LOADING
+<span class="lineNum">      41 </span>            :     /**
+<span class="lineNum">      42 </span>            :      *@brief Loads all the images from the dataset by type of sign and labels them
+<span class="lineNum">      43 </span>            :      *@param trainImgs is an output vector that contains all the training images
+<span class="lineNum">      44 </span>            :      *@param trainLabels is an output vector that contains all the labels of the training images
+<span class="lineNum">      45 </span>            :      *@return none
+<span class="lineNum">      46 </span>            :      */
+<span class="lineNum">      47 </span>            :     void loadTrainingImgs(std::vector&lt;cv::Mat&gt; &amp;trainImgs,
+<span class="lineNum">      48 </span>            :         std::vector&lt;int&gt; &amp;trainLabels);
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            :     // TRAIN SVM
+<span class="lineNum">      51 </span>            :     /**
+<span class="lineNum">      52 </span>            :      *@brief Sets all the parameters of the SVM object and feeds it with the HOG features of the labeled training images. 
+<span class="lineNum">      53 </span>            :      *@param svm is the Support vector Machine object
+<span class="lineNum">      54 </span>            :      *@param trainHOG is the cv::Mat with the HOG features from the training images
+<span class="lineNum">      55 </span>            :      *@param trainLabels is the vector wuth all the labels for the training images
+<span class="lineNum">      56 </span>            :      *@return none
+<span class="lineNum">      57 </span>            :      */
+<span class="lineNum">      58 </span>            :     void SVMTraining(cv::Ptr&lt;cv::ml::SVM&gt; &amp;svm,
+<span class="lineNum">      59 </span>            :         cv::Mat trainHOG, std::vector&lt;int&gt; trainLabels);
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span>            :  public:
+<span class="lineNum">      62 </span>            :     cv::Mat imagen;  /// OpenCV Image from the camera given by the subscriber
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span>            :     std::vector&lt;cv::Rect&gt; boxes;  /// Bounding boxes in the current frame
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            :     float traffic_sign;  /// The label of the detections, outputed by the SVM
+<span class="lineNum">      67 </span>            : 
+<span class="lineNum">      68 </span>            :     // IMAGE CALLBACK
+<span class="lineNum">      69 </span>            :     /**
+<span class="lineNum">      70 </span>            :      *@brief Callback used in the subscriber for the camera topic. Gets the ROS Img msg and transforms it to an OpenCV img.
+<span class="lineNum">      71 </span>            :      *@param msg is the ROS Image msg
+<span class="lineNum">      72 </span>            :      *@return none
+<span class="lineNum">      73 </span>            :      */
+<span class="lineNum">      74 </span>            :     void imageCallback(const sensor_msgs::ImageConstPtr&amp; msg);
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            :     /**
+<span class="lineNum">      77 </span>            :      *@brief Apply gaussian filter to the input image to denoise it
+<span class="lineNum">      78 </span>            :      *@param inputImage is the current image to be filtered
+<span class="lineNum">      79 </span>            :      *@return Blurred and denoised image
+<span class="lineNum">      80 </span>            :      */
+<span class="lineNum">      81 </span>            :     cv::Mat deNoise(cv::Mat inputImage);
+<span class="lineNum">      82 </span>            : 
+<span class="lineNum">      83 </span>            :     // MSER FEATURES
+<span class="lineNum">      84 </span>            :     /**
+<span class="lineNum">      85 </span>            :      *@brief Find MSER features in the image. First normalize image and binarize, then look for regions and finally, resize each regions image.
+<span class="lineNum">      86 </span>            :      *@param img is the current image where MSER features are detected
+<span class="lineNum">      87 </span>            :      *@param area is an output variable that stores the area of each region's bounding box 
+<span class="lineNum">      88 </span>            :      *@return Vector of all the images of detections 
+<span class="lineNum">      89 </span>            :      */
+<span class="lineNum">      90 </span>            :     std::vector&lt;cv::Mat&gt; MSER_Features(cv::Mat img, double &amp;area);
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span>            :     // HOG FEATURES
+<span class="lineNum">      93 </span>            :     /**
+<span class="lineNum">      94 </span>            :      *@brief Compute the HOG features in every image of a vector
+<span class="lineNum">      95 </span>            :      *@param hog is the HOG Descriptor object with all the parameters set up
+<span class="lineNum">      96 </span>            :      *@param imgs is the vector of images to get theHOG from
+<span class="lineNum">      97 </span>            :      *@return Matrix with the HOG Descriptor for all the images.
+<span class="lineNum">      98 </span>            :      */
+<span class="lineNum">      99 </span>            :     cv::Mat HOG_Features(cv::HOGDescriptor hog, std::vector&lt;cv::Mat&gt; imgs);
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span>            :     // TRAINING
+<span class="lineNum">     102 </span>            :     /**
+<span class="lineNum">     103 </span>            :      *@brief Function that runs loadTrainImgs(), HOG_Features() and SVM Training, sequentially
+<span class="lineNum">     104 </span>            :      *@param hog is the HOG Descriptor object with all the parameters set up
+<span class="lineNum">     105 </span>            :      *@param svm is the Support vector Machine object
+<span class="lineNum">     106 </span>            :      *@param trainImgs is an output vector that contains all the training images
+<span class="lineNum">     107 </span>            :      *@param trainLabels is an output vector that contains all the labels of the training images
+<span class="lineNum">     108 </span>            :      *@return 1 if success
+<span class="lineNum">     109 </span>            :      */
+<span class="lineNum">     110 </span>            :     int trainStage(cv::HOGDescriptor &amp;hog, cv::Ptr&lt;cv::ml::SVM&gt; &amp;svm,
+<span class="lineNum">     111 </span>            :         std::vector&lt;cv::Mat&gt; &amp;trainImgs, std::vector&lt;int&gt; &amp;trainLabels);
+<span class="lineNum">     112 </span>            : 
+<span class="lineNum">     113 </span>            :     // CLASSIFICATION
+<span class="lineNum">     114 </span>            :     /**
+<span class="lineNum">     115 </span>            :      *@brief Feed SVM with the HOG Matrix of the current image and outputs its label.
+<span class="lineNum">     116 </span>            :      *@param testHOG is the HOG Descriptor object with all the parameters set up
+<span class="lineNum">     117 </span>            :      *@param svm is the Support vector Machine object
+<span class="lineNum">     118 </span>            :      *@return Labels of the tested set of features. Label of the sign being recognized.
+<span class="lineNum">     119 </span>            :      */
+<span class="lineNum">     120 </span>            :     float SVMTesting(cv::Ptr&lt;cv::ml::SVM&gt; &amp;svm, cv::Mat testHOG);
+<span class="lineNum">     121 </span>            : 
+<span class="lineNum">     122 </span>            :     // VISUALIZATION
+<span class="lineNum">     123 </span>            :     /**
+<span class="lineNum">     124 </span>            :      *@brief Opens a vindow with the robot's view of the workspace. It outputs bouding box around detected signs and the name of the sign.
+<span class="lineNum">     125 </span>            :      *@param none
+<span class="lineNum">     126 </span>            :      *@return 1 if success
+<span class="lineNum">     127 </span>            :      */
+<span class="lineNum">     128 </span>            :     int visualization();
+<span class="lineNum">     129 </span>            : };
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

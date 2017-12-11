@@ -9,7 +9,7 @@ The objective of this project was to design and develop a traffic sign recogniti
 
 This project is focused mainly in the computer vision aspect of it, a crucial module. If an automated car is going to drive around unpredictable environments, it has to be able to perceive and detect every small detail that surrounds it. Since tests were needed, the algorithm ewas developed using ROS and tested in a robot. The chosen robot is a Turtlebot 2. 
 
-The robot will be driving around a simulated world, searching for traffic signs with its camera. Any time a traffic sign is recognized, the vision algorithm will send to the robot a command on how does it have to react to that sign. For example, if the robot finds a "turn left" sign, it will sop in from of the sign and turn to the left instead of continue going forward or turning to another direction. 
+The robot will be driving around a simulated world, searching for traffic signs with its camera. Any time a traffic sign is recognized, the vision algorithm will send a command to the robot telling it how does it have to react to that sign. For example, if the robot finds a "turn left" sign, it will stop in front of the sign and turn to the left instead of continue going forward or turning to another direction. 
 
 The project was developed using ROS Kinetic, C++ and OpenCV 3.2.0. The following subsection of the Overview will explain the pipeline of the algorithm step by step.
 
@@ -27,13 +27,13 @@ The second diagram describes the main algorithm of the project. It involves two 
 ![activity_main](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/UML/revised/Main_ActivityUML_Revised.png)
 
 #### Training and testing traffic signs
-For this project, only three types of signs were used: stop sign, turn sign and forward sign. To train the SVM, numerous and different images from the [Belgian dataset](http://btsd.ethz.ch/shareddata/) were used.  For future work, more types of signs can be added to the training stage easily. Two examples of the type of images that were used can be seen below.
+For this project, only three types of signs were used: stop sign, turn sign and forward sign. To train the SVM, numerous and different images from the [Belgian dataset](http://btsd.ethz.ch/shareddata/) were used.  More types of signs can be added to the training stage easily for future work. Two examples of the type of images that were used can be seen below.
 
 ![stop](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/Images/train_2.png)
 
 ![turn](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/Images/train_1.png)
 
-Once the SVM was trained, it detects the traffic signs in different images. The following images correspond to the robot's point of view of the workspace. A bounding box and the type of sign can be seen in the image to help visualizing the results. This information is then sent to the robot commander node, that, depending on the type of sign detected, will move the robot in one way or another.
+Once the SVM was trained, it is able to detect the traffic signs in different images. The following images correspond to the robot's point of view of the workspace. A bounding box and the type of sign can be seen in the image to help visualizing the results. This information is then sent to the robot commander node, that depending on the type of sign detected, will move the robot in one way or another.
 
 ![robot_view1](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/Images/robot_view1.png)
 
@@ -107,6 +107,23 @@ catkin_make run_tests
 ```
 The command takes some time to finish.
 
+#### Code coverage
+
+The current coverage for the project is 98.9%. The details can be seen [here](http://htmlpreview.github.io/?https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/results/out/index.html)
+
+To check the code coverage in the project, follow the next steps:
+```
+cd ~/ros_ws/build
+lcov --directory . --capture --output-file coverage.info
+lcov --remove coverage.info '/opt/*' '/usr/*' '*/devel/*' '*test_*' '*_test*' --output-file coverage.info
+lcov --list coverage.info
+```
+This last command will output the coverage of each file in the terminal. To generate an html file with the more information:
+```
+genhtml coverage.info --output-directory out
+```
+This will generate a folder called `out`. Inside the folder, open `index.html` to view the details of the coverage.
+
 ## Recording a bag file
 
 By default, recording the demo in a bag file is disabled. If wanted, all the topics except for the camera ones can be recorded by following the next commands:
@@ -114,23 +131,49 @@ By default, recording the demo in a bag file is disabled. If wanted, all the top
 ```
 cd ~/ros_ws
 source devel/setup.bash
-roslaunch traffic_sign_recognition demo.launch rosbagFlag :=true
+roslaunch traffic_sign_recognition demo.launch rosbagFlag:=true
 ```
 
-This will record the data in  `TSR.bag` in the ~/.ros folder. To access it and see its information:
+This will record the data in `TSR.bag` in the ~/.ros folder. To access it and see its information:
 
 ```
 cd ~/.ros
 rosbag info TSR.bag
 ```
 
+## Doxygen Documentation
+
+The Dogymen generated documentation can be checked here: [Traffic Sign Doxygen Documents](http://htmlpreview.github.io/?https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/docs/html/index.html)
+
+To generate Doxygen Documentation in HTML and LaTEX, follow the next steps:
+
+```
+cd <path to repository>
+mkdir <documentation_folder_name>
+cd <documentation_folder_name>
+doxygen -g <config_file_name>
+```
+Inside the configuration file, update:
+```
+PROJECT_NAME = 'your project name'
+INPUT = ../src ../include ../test
+```
+Run and generate the documents by running the next command:
+```
+doxygen <config_file_name>
+```
+
 ## Known issues/bugs
 
-The only two detected issues for now:
+The only two detected issues at the moment:
 
-* When running the demo, false classification of a sign can happen. This will take the robot to, for example, take a turn when there's no turn sign. From all the simulations, this only happened once.
+* When running the demo, false classification of a sign can happen. This will make the robot, for example, to take a turn when there's no turn sign. This only happened in one experiment.
 
 * The Gazebo model of turtlebot drifts towards the right when moving forward for a long distance. This had to be rectified in the stops the robot does during the demo.
+
+## Author
+
+Miguel Angel Maestre Trueba. Second year M. Eng in Robotics graduate student, working as research assistant in robotics/computer vision application in the Autonomy, Robotics and Cognition Lab in the University of Maryland, College Park.
 
 ## License
 

@@ -1,0 +1,333 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - src/classifier.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - classifier.cpp<span style="font-size: 80%;"> (source / <a href="classifier.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">132</td>
+            <td class="headerCovTableEntry">135</td>
+            <td class="headerCovTableEntryHi">97.8 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2017-12-10 20:13:53</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /** MIT License</a>
+<span class="lineNum">       2 </span>            : Copyright (c) 2017 Miguel Maestre Trueba
+<span class="lineNum">       3 </span>            : Permission is hereby granted, free of charge, to any person obtaining a copy
+<span class="lineNum">       4 </span>            : of this software and associated documentation files (the &quot;Software&quot;), to deal
+<span class="lineNum">       5 </span>            : in the Software without restriction, including without limitation the rights
+<span class="lineNum">       6 </span>            : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+<span class="lineNum">       7 </span>            : copies of the Software, and to permit persons to whom the Software is
+<span class="lineNum">       8 </span>            : furnished to do so, subject to the following conditions:
+<span class="lineNum">       9 </span>            : The above copyright notice and this permission notice shall be included in all
+<span class="lineNum">      10 </span>            : copies or substantial portions of the Software.
+<span class="lineNum">      11 </span>            : THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+<span class="lineNum">      12 </span>            : IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+<span class="lineNum">      13 </span>            : FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+<span class="lineNum">      14 </span>            : AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+<span class="lineNum">      15 </span>            : WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+<span class="lineNum">      16 </span>            : CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+<span class="lineNum">      17 </span>            :  *
+<span class="lineNum">      18 </span>            :  *
+<span class="lineNum">      19 </span>            :  *@copyright Copyright 2017 Miguel Maestre Trueba
+<span class="lineNum">      20 </span>            :  *@file classifier.cpp
+<span class="lineNum">      21 </span>            :  *@author Miguel Maestre Trueba
+<span class="lineNum">      22 </span>            :  *@brief Implementation of the methods of class classifier.
+<span class="lineNum">      23 </span>            :  *@brief These methods are in charge of receiving images and detecting and classifying signs in the images.
+<span class="lineNum">      24 </span>            :  */
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : #include &lt;cv_bridge/cv_bridge.h&gt;
+<span class="lineNum">      27 </span>            : #include &lt;cstdlib&gt;
+<span class="lineNum">      28 </span>            : #include &lt;string&gt;
+<span class="lineNum">      29 </span>            : #include &lt;opencv2/highgui/highgui.hpp&gt;
+<span class="lineNum">      30 </span>            : #include &quot;ros/ros.h&quot;
+<span class="lineNum">      31 </span>            : #include &quot;opencv2/opencv.hpp&quot;
+<span class="lineNum">      32 </span>            : #include &quot;ros/console.h&quot;
+<span class="lineNum">      33 </span>            : #include &quot;classifier.hpp&quot;
+<a name="34"><span class="lineNum">      34 </span>            : </a>
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span><span class="lineCov">       2974 : void classifier::imageCallback(const sensor_msgs::ImageConstPtr&amp; msg) {</span>
+<span class="lineNum">      37 </span><span class="lineCov">       5948 :     cv_bridge::CvImagePtr cv_ptr;</span>
+<span class="lineNum">      38 </span>            :     // Convert from ROS Image msg to OpenCV image
+<span class="lineNum">      39 </span>            :     try {
+<span class="lineNum">      40 </span><span class="lineCov">       2974 :         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);</span>
+<span class="lineNum">      41 </span><span class="lineCov">       2974 :         imagen = cv_ptr-&gt;image;</span>
+<span class="lineNum">      42 </span><span class="lineCov">       2974 :         cv::waitKey(30);</span>
+<span class="lineNum">      43 </span>            :     }
+<span class="lineNum">      44 </span><span class="lineNoCov">          0 :     catch (cv_bridge::Exception&amp; e) {</span>
+<span class="lineNum">      45 </span><span class="lineNoCov">          0 :         ROS_ERROR(&quot;Could not convert from '%s' to 'bgr8'.&quot;,</span>
+<span class="lineNum">      46 </span>            :             msg-&gt;encoding.c_str());
+<span class="lineNum">      47 </span>            :     }
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">       2974 : }</span></a>
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span><span class="lineCov">       3389 : cv::Mat classifier::deNoise(cv::Mat inputImage) {</span>
+<span class="lineNum">      51 </span><span class="lineCov">       3389 :     cv::Mat output;</span>
+<span class="lineNum">      52 </span>            :     // Apply gaussian filter to denoise image
+<span class="lineNum">      53 </span><span class="lineCov">       3389 :     cv::GaussianBlur(inputImage, output, cv::Size(3, 3), 0, 0);</span>
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span><span class="lineCov">       3389 :     return output;</span>
+<a name="56"><span class="lineNum">      56 </span>            : }</a>
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span><span class="lineCov">       3391 : std::vector&lt;cv::Mat&gt; classifier::MSER_Features(cv::Mat img, double &amp;area) {</span>
+<span class="lineNum">      59 </span><span class="lineCov">       6782 :     cv::Mat bgr[3];</span>
+<span class="lineNum">      60 </span><span class="lineCov">       6782 :     cv::Mat red_blue;</span>
+<span class="lineNum">      61 </span><span class="lineCov">       6782 :     cv::Mat rb_binary;</span>
+<span class="lineNum">      62 </span><span class="lineCov">       6782 :     cv::Mat detection;</span>
+<span class="lineNum">      63 </span><span class="lineCov">       3391 :     cv::Size size(64, 64);</span>
+<span class="lineNum">      64 </span><span class="lineCov">       3391 :     std::vector&lt;cv::Mat&gt; detections;</span>
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            :     // Normalize images with respect to Red and Blue and binarize
+<span class="lineNum">      67 </span><span class="lineCov">       3391 :     split(img, bgr);</span>
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span><span class="lineCov">       6782 :     cv::Mat red_norm = 255*(bgr[2] / (bgr[0] + bgr[1] + bgr[2]));</span>
+<span class="lineNum">      70 </span><span class="lineCov">       6782 :     cv::Mat red;</span>
+<span class="lineNum">      71 </span><span class="lineCov">       3391 :     red_norm.convertTo(red, CV_8UC1);</span>
+<span class="lineNum">      72 </span><span class="lineCov">       6782 :     cv::Mat blue_norm = 255*(bgr[0] / (bgr[0] + bgr[1] + bgr[2]));</span>
+<span class="lineNum">      73 </span><span class="lineCov">       6782 :     cv::Mat blue;</span>
+<span class="lineNum">      74 </span><span class="lineCov">       3391 :     blue_norm.convertTo(blue, CV_8UC1);</span>
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span><span class="lineCov">       3391 :     max(red, blue, red_blue);</span>
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span><span class="lineCov">       3391 :     threshold(red_blue, rb_binary, 200, 255, cv::THRESH_BINARY);</span>
+<span class="lineNum">      79 </span>            : 
+<span class="lineNum">      80 </span>            :     // MSER regions detection
+<span class="lineNum">      81 </span>            :     cv::Ptr&lt;cv::MSER&gt; ms = cv::MSER::create(50, 1000, 14400, 0.9,
+<span class="lineNum">      82 </span><span class="lineCov">       6782 :         0.1, 200, 1.01, 0.1, 1);</span>
+<span class="lineNum">      83 </span><span class="lineCov">       6782 :     std::vector&lt;std::vector&lt;cv::Point&gt; &gt; regions;</span>
+<span class="lineNum">      84 </span><span class="lineCov">       6782 :     std::vector&lt;cv::Rect&gt; mser_bbox;</span>
+<span class="lineNum">      85 </span><span class="lineCov">       3391 :     ms-&gt;detectRegions(rb_binary, regions, mser_bbox);</span>
+<span class="lineNum">      86 </span>            : 
+<span class="lineNum">      87 </span>            :     // For every bounding box in the image
+<span class="lineNum">      88 </span><span class="lineCov">       5650 :     for (cv::Rect i : mser_bbox) {</span>
+<span class="lineNum">      89 </span>            :         // Ratio filter of detected regions
+<span class="lineNum">      90 </span><span class="lineCov">       4518 :         double ratio = (static_cast&lt;double&gt;(i.height) /</span>
+<span class="lineNum">      91 </span><span class="lineCov">       4518 :             static_cast&lt;double&gt;(i.width));</span>
+<span class="lineNum">      92 </span>            : 
+<span class="lineNum">      93 </span><span class="lineCov">       2259 :         if (ratio &gt; 0.8 &amp;&amp; ratio &lt; 1.2) {</span>
+<span class="lineNum">      94 </span>            :             // Crop bounding boxes to get new images
+<span class="lineNum">      95 </span><span class="lineCov">       1104 :             detection = img(i);</span>
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span><span class="lineCov">       1104 :             area = static_cast&lt;double&gt;(i.height) * static_cast&lt;double&gt;(i.width);</span>
+<span class="lineNum">      98 </span>            : 
+<span class="lineNum">      99 </span>            :             // Resize images  to fit the trained data
+<span class="lineNum">     100 </span><span class="lineCov">       1104 :             cv::resize(detection, detection, size);</span>
+<span class="lineNum">     101 </span>            : 
+<span class="lineNum">     102 </span>            :             // Output the vector of images
+<span class="lineNum">     103 </span><span class="lineCov">       1104 :             detections.push_back(detection);</span>
+<span class="lineNum">     104 </span><span class="lineCov">       1104 :             this-&gt;boxes.push_back(i);</span>
+<span class="lineNum">     105 </span>            :         }
+<span class="lineNum">     106 </span>            :     }
+<span class="lineNum">     107 </span><span class="lineCov">       6782 :     return detections;</span>
+<a name="108"><span class="lineNum">     108 </span>            : }</a>
+<span class="lineNum">     109 </span>            : 
+<span class="lineNum">     110 </span><span class="lineCov">       1112 : cv::Mat classifier::HOG_Features(cv::HOGDescriptor hog,</span>
+<span class="lineNum">     111 </span>            :     std::vector&lt;cv::Mat&gt; imgs) {
+<span class="lineNum">     112 </span><span class="lineCov">       2224 :     std::vector&lt;std::vector&lt;float&gt; &gt; HOG;</span>
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span>            :     // For all of the images of the vector, compute HOG features
+<span class="lineNum">     115 </span><span class="lineCov">       3409 :     for (cv::Mat i : imgs) {</span>
+<span class="lineNum">     116 </span><span class="lineCov">       4594 :         std::vector&lt;float&gt; descriptor;</span>
+<span class="lineNum">     117 </span><span class="lineCov">       2297 :         hog.compute(i, descriptor);</span>
+<span class="lineNum">     118 </span><span class="lineCov">       2297 :         HOG.push_back(descriptor);</span>
+<span class="lineNum">     119 </span>            :     }
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span>            :     // Convert HOG features vector to Matrix for the SVM
+<span class="lineNum">     122 </span><span class="lineCov">       1112 :     cv::Mat signMat(HOG.size(), HOG[0].size(), CV_32FC1);</span>
+<span class="lineNum">     123 </span><span class="lineCov">       1112 :     auto i = 0;</span>
+<span class="lineNum">     124 </span><span class="lineCov">       5706 :     while (i &lt; HOG.size()) {</span>
+<span class="lineNum">     125 </span><span class="lineCov">       2297 :         auto j = 0;</span>
+<span class="lineNum">     126 </span><span class="lineCov">     374411 :         while (j &lt; HOG[0].size()) {</span>
+<span class="lineNum">     127 </span><span class="lineCov">     186057 :             signMat.at&lt;float&gt;(i, j) = HOG[i][j];</span>
+<span class="lineNum">     128 </span><span class="lineCov">     186057 :             j++;</span>
+<span class="lineNum">     129 </span>            :         }
+<span class="lineNum">     130 </span><span class="lineCov">       2297 :         i++;</span>
+<span class="lineNum">     131 </span>            :     }
+<span class="lineNum">     132 </span><span class="lineCov">       2224 :     return signMat;</span>
+<a name="133"><span class="lineNum">     133 </span>            : }</a>
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span><span class="lineCov">          8 : void classifier::loadTrainingImgs(std::vector&lt;cv::Mat&gt; &amp;trainImgs,</span>
+<span class="lineNum">     136 </span>            :     std::vector&lt;int&gt; &amp;trainLabels) {
+<span class="lineNum">     137 </span>            :     // Load all the forward signs images from dataset and label them
+<span class="lineNum">     138 </span><span class="lineCov">         16 :     cv::String pathname = &quot;./Training_Images/1&quot;;</span>
+<span class="lineNum">     139 </span><span class="lineCov">         16 :     std::vector&lt;cv::String&gt; filenames;</span>
+<span class="lineNum">     140 </span><span class="lineCov">          8 :     cv::glob(pathname, filenames);</span>
+<span class="lineNum">     141 </span><span class="lineCov">          8 :     cv::Size size(64, 64);</span>
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span><span class="lineCov">        376 :     for (cv::String i : filenames) {</span>
+<span class="lineNum">     144 </span><span class="lineCov">        736 :         cv::Mat src = imread(i);</span>
+<span class="lineNum">     145 </span>            : 
+<span class="lineNum">     146 </span><span class="lineCov">        368 :         cv::resize(src, src, size);</span>
+<span class="lineNum">     147 </span><span class="lineCov">        368 :         trainImgs.push_back(src);</span>
+<span class="lineNum">     148 </span><span class="lineCov">        368 :         trainLabels.push_back(1);</span>
+<span class="lineNum">     149 </span>            :     }
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span>            :     // Load all the turn signs images from dataset and label them
+<span class="lineNum">     152 </span><span class="lineCov">         16 :     cv::String pathname2 = &quot;./Training_Images/2&quot;;</span>
+<span class="lineNum">     153 </span><span class="lineCov">         16 :     std::vector&lt;cv::String&gt; filenames2;</span>
+<span class="lineNum">     154 </span><span class="lineCov">          8 :     cv::glob(pathname2, filenames2);</span>
+<span class="lineNum">     155 </span><span class="lineCov">          8 :     cv::Size size2(64, 64);</span>
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span><span class="lineCov">        488 :     for (cv::String i : filenames2) {</span>
+<span class="lineNum">     158 </span><span class="lineCov">        960 :         cv::Mat src2 = imread(i);</span>
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span><span class="lineCov">        480 :         cv::resize(src2, src2, size2);</span>
+<span class="lineNum">     161 </span><span class="lineCov">        480 :         trainImgs.push_back(src2);</span>
+<span class="lineNum">     162 </span><span class="lineCov">        480 :         trainLabels.push_back(2);</span>
+<span class="lineNum">     163 </span>            :     }
+<span class="lineNum">     164 </span>            : 
+<span class="lineNum">     165 </span>            :     // Load all the stop signs images from dataset and label them
+<span class="lineNum">     166 </span><span class="lineCov">         16 :     cv::String pathname3 = &quot;./Training_Images/3&quot;;</span>
+<span class="lineNum">     167 </span><span class="lineCov">         16 :     std::vector&lt;cv::String&gt; filenames3;</span>
+<span class="lineNum">     168 </span><span class="lineCov">          8 :     cv::glob(pathname3, filenames3);</span>
+<span class="lineNum">     169 </span><span class="lineCov">          8 :     cv::Size size3(64, 64);</span>
+<span class="lineNum">     170 </span>            : 
+<span class="lineNum">     171 </span><span class="lineCov">        352 :     for (cv::String i : filenames3) {</span>
+<span class="lineNum">     172 </span><span class="lineCov">        688 :         cv::Mat src3 = imread(i);</span>
+<span class="lineNum">     173 </span>            : 
+<span class="lineNum">     174 </span><span class="lineCov">        344 :         cv::resize(src3, src3, size3);</span>
+<span class="lineNum">     175 </span><span class="lineCov">        344 :         trainImgs.push_back(src3);</span>
+<span class="lineNum">     176 </span><span class="lineCov">        344 :         trainLabels.push_back(3);</span>
+<span class="lineNum">     177 </span>            :     }
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">          8 : }</span></a>
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span><span class="lineCov">          8 : void classifier::SVMTraining(cv::Ptr&lt;cv::ml::SVM&gt; &amp;svm, cv::Mat trainHOG,</span>
+<span class="lineNum">     181 </span>            :     std::vector&lt;int&gt; trainLabels) {
+<span class="lineNum">     182 </span>            :     // Set parameters of the SVM
+<span class="lineNum">     183 </span><span class="lineCov">          8 :     svm-&gt;setGamma(0.50625);</span>
+<span class="lineNum">     184 </span><span class="lineCov">          8 :     svm-&gt;setC(12.5);</span>
+<span class="lineNum">     185 </span><span class="lineCov">          8 :     svm-&gt;setKernel(cv::ml::SVM::RBF);</span>
+<span class="lineNum">     186 </span><span class="lineCov">          8 :     svm-&gt;setType(cv::ml::SVM::C_SVC);</span>
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span>            :     // Feed SVM with all the labeled data and train it
+<span class="lineNum">     189 </span>            :     cv::Ptr&lt;cv::ml::TrainData&gt; td = cv::ml::TrainData::create(trainHOG,
+<span class="lineNum">     190 </span><span class="lineCov">         40 :         cv::ml::ROW_SAMPLE, trainLabels);</span>
+<span class="lineNum">     191 </span><span class="lineCov">          8 :     svm-&gt;train(td);</span>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">          8 : }</span></a>
+<span class="lineNum">     193 </span>            : 
+<span class="lineNum">     194 </span><span class="lineCov">          8 : int classifier::trainStage(cv::HOGDescriptor &amp;hog, cv::Ptr&lt;cv::ml::SVM&gt; &amp;svm,</span>
+<span class="lineNum">     195 </span>            :     std::vector&lt;cv::Mat&gt; &amp;trainImgs, std::vector&lt;int&gt; &amp;trainLabels) {
+<span class="lineNum">     196 </span><span class="lineCov">          8 :     ROS_INFO_STREAM(&quot;SVM Training Stage started...&quot;);</span>
+<span class="lineNum">     197 </span>            :     // Load training data and resize
+<span class="lineNum">     198 </span><span class="lineCov">          8 :     this-&gt;loadTrainingImgs(trainImgs, trainLabels);</span>
+<span class="lineNum">     199 </span>            : 
+<span class="lineNum">     200 </span>            :     // HOG features of training images
+<span class="lineNum">     201 </span><span class="lineCov">         16 :     cv::Mat trainHOG = this-&gt;HOG_Features(hog, trainImgs);</span>
+<span class="lineNum">     202 </span>            : 
+<span class="lineNum">     203 </span>            :     // Train SVM and save model
+<span class="lineNum">     204 </span><span class="lineCov">          8 :     this-&gt;SVMTraining(svm, trainHOG, trainLabels);</span>
+<span class="lineNum">     205 </span><span class="lineCov">          8 :     ROS_INFO_STREAM(&quot;SVM Training Stage completed&quot;);</span>
+<span class="lineNum">     206 </span><span class="lineCov">          8 :     ros::Duration(2).sleep();</span>
+<span class="lineNum">     207 </span>            : 
+<span class="lineNum">     208 </span>            :     // Return 1 as success
+<span class="lineNum">     209 </span><span class="lineCov">         16 :     return 1;</span>
+<a name="210"><span class="lineNum">     210 </span>            : }</a>
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span><span class="lineCov">       1103 : float classifier::SVMTesting(cv::Ptr&lt;cv::ml::SVM&gt; &amp;svm, cv::Mat testHOG) {</span>
+<span class="lineNum">     213 </span><span class="lineCov">       1103 :     cv::Mat answer;</span>
+<span class="lineNum">     214 </span>            : 
+<span class="lineNum">     215 </span>            :     // Feed SVM with HOG features from detections and label it
+<span class="lineNum">     216 </span><span class="lineCov">       1103 :     svm-&gt;predict(testHOG, answer);</span>
+<span class="lineNum">     217 </span>            : 
+<span class="lineNum">     218 </span>            :     // Return the label of the detection
+<span class="lineNum">     219 </span><span class="lineCov">       1103 :     auto i = 0;</span>
+<span class="lineNum">     220 </span><span class="lineCov">       1103 :     while (i &lt; answer.rows) {</span>
+<span class="lineNum">     221 </span><span class="lineCov">       1103 :         this-&gt;traffic_sign = answer.at&lt;float&gt;(i, 0);</span>
+<span class="lineNum">     222 </span><span class="lineCov">       1103 :         i++;</span>
+<span class="lineNum">     223 </span><span class="lineCov">       2206 :         return this-&gt;traffic_sign;</span>
+<span class="lineNum">     224 </span>            :     }
+<a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span><span class="lineCov">       3389 : int classifier::visualization() {</span>
+<span class="lineNum">     228 </span><span class="lineCov">       6778 :     cv::Mat viz;</span>
+<span class="lineNum">     229 </span><span class="lineCov">       3389 :     this-&gt;imagen.copyTo(viz);</span>
+<span class="lineNum">     230 </span><span class="lineCov">       6778 :     cv::putText(viz, &quot;Robot View&quot;, cv::Point(10, 30),</span>
+<span class="lineNum">     231 </span><span class="lineCov">      10167 :         cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 0, 255));</span>
+<span class="lineNum">     232 </span>            : 
+<span class="lineNum">     233 </span>            :     // For all the signs in the image, print bounding box and type of sign
+<span class="lineNum">     234 </span><span class="lineCov">       4492 :     for (cv::Rect i : this-&gt;boxes) {</span>
+<span class="lineNum">     235 </span><span class="lineCov">       1103 :         cv::rectangle(viz, i, CV_RGB(50, 200, 0), 2);</span>
+<span class="lineNum">     236 </span><span class="lineCov">       1103 :         if (this-&gt;traffic_sign == 1) {</span>
+<span class="lineNum">     237 </span><span class="lineCov">        190 :             cv::Point org(i.x, i.y - 5);</span>
+<span class="lineNum">     238 </span><span class="lineCov">        380 :             cv::putText(viz, &quot;Forward&quot;, org,</span>
+<span class="lineNum">     239 </span><span class="lineCov">        570 :                 cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 0, 255));</span>
+<span class="lineNum">     240 </span>            :         }
+<span class="lineNum">     241 </span><span class="lineCov">       1103 :         if (this-&gt;traffic_sign == 2) {</span>
+<span class="lineNum">     242 </span><span class="lineCov">        748 :             cv::Point org(i.x, i.y - 5);</span>
+<span class="lineNum">     243 </span><span class="lineCov">       1496 :             cv::putText(viz, &quot;Turn&quot;, org,</span>
+<span class="lineNum">     244 </span><span class="lineCov">       2244 :                 cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 0, 255));</span>
+<span class="lineNum">     245 </span>            :         }
+<span class="lineNum">     246 </span><span class="lineCov">       1103 :         if (this-&gt;traffic_sign == 3) {</span>
+<span class="lineNum">     247 </span><span class="lineCov">        165 :             cv::Point org(i.x, i.y - 5);</span>
+<span class="lineNum">     248 </span><span class="lineCov">        330 :             cv::putText(viz, &quot;Stop&quot;, org,</span>
+<span class="lineNum">     249 </span><span class="lineCov">        495 :                 cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 0, 255));</span>
+<span class="lineNum">     250 </span>            :         }
+<span class="lineNum">     251 </span>            :     }
+<span class="lineNum">     252 </span>            : 
+<span class="lineNum">     253 </span><span class="lineCov">       3389 :     this-&gt;boxes.clear();</span>
+<span class="lineNum">     254 </span><span class="lineCov">       3389 :     cv::namedWindow(&quot;view&quot;);</span>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">       3389 :     imshow(&quot;view&quot;, viz);</span></a>
+<span class="lineNum">     256 </span><span class="lineCov">       6778 :     return 1;</span>
+<span class="lineNum">     257 </span><span class="lineCov">         15 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
