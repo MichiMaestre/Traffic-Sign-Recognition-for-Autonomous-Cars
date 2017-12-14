@@ -1,6 +1,5 @@
 # Traffic Sign Recognition for Autonomous Cars applications using a TurtleBot 2
 [![Build Status](https://travis-ci.org/MichiMaestre/traffic_sign_recognition.svg?branch=master)](https://travis-ci.org/MichiMaestre/traffic_sign_recognition)
-[![Coverage Status](https://coveralls.io/repos/github/MichiMaestre/traffic_sign_recognition/badge.svg?branch=master)](https://coveralls.io/github/MichiMaestre/traffic_sign_recognition?branch=master)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Overview
@@ -39,6 +38,11 @@ Once the SVM was trained, it is able to detect the traffic signs in different im
 
 ![robot_view2](https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/Images/robot_view2.png)
 
+## Presentation
+
+* [Presentation video](https://www.youtube.com/watch?v=1S6G-v9FFRI&feature=youtu.be)
+
+* [Slides](https://docs.google.com/a/terpmail.umd.edu/presentation/d/1Ou_m6cw1QjKVDYbkBXsE9HtOTUIVvummQW5jkTnbYrw/edit?usp=sharing)
 
 ## Solo Iterative Process
 
@@ -84,7 +88,6 @@ git clone https://github.com/MichiMaestre/traffic_sign_recognition.git
 cd ..
 catkin_make
 cp -R ~/ros_ws/src/traffic_sign_recognition/Images/Training_Images/ ~/ros_ws/devel/lib/traffic_sign_recognition/
-cp -R ~/ros_ws/src/traffic_sign_recognition/Images/test_imgs/ ~/ros_ws/devel/lib/traffic_sign_recognition/
 ```
 ## How to run
 
@@ -102,20 +105,21 @@ To run the tests, follow the next steps:
 
 ```
 cd ~/ros_ws
+cp -R ~/ros_ws/src/traffic_sign_recognition/Images/test_imgs/ ~/ros_ws/devel/lib/traffic_sign_recognition/
 source devel/setup.bash
 catkin_make run_tests
 ```
 The command takes some time to finish.
+If first two tests fail, rerun the command `catkin_make run_tests`.
 
 #### Code coverage
 
-The current coverage for the project is 98.9%. The details can be seen [here](http://htmlpreview.github.io/?https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/results/out/index.html)
+The current coverage for the project is 98.9% (coverage of files written for this project). The details can be seen [here](http://htmlpreview.github.io/?https://github.com/MichiMaestre/traffic_sign_recognition/blob/master/results/out/index.html)
 
 To check the code coverage in the project, follow the next steps:
 ```
 cd ~/ros_ws/build
 lcov --directory . --capture --output-file coverage.info
-lcov --remove coverage.info '/opt/*' '/usr/*' '*/devel/*' '*test_*' '*_test*' --output-file coverage.info
 lcov --list coverage.info
 ```
 This last command will output the coverage of each file in the terminal. To generate an html file with the more information:
@@ -167,13 +171,15 @@ doxygen <config_file_name>
 
 The only two detected issues at the moment:
 
-* When running the demo, false classification of a sign can happen. This will make the robot, for example, to take a turn when there's no turn sign. This only happened in one experiment.
+* When running the demo, false classification of a sign can happen. This will make the robot, for example, to take a turn when there's no turn sign. This only happened in one experiment. It can also happen that the robot does not detect a traffic signs and ends up crashing. From different trials, it can be inferred that these issues usually happen when the computer is experiencing a high level of computation. When this happens, rerun the demo and it should work.
 
 * The Gazebo model of turtlebot drifts towards the right when moving forward for a long distance. This had to be rectified in the stops the robot does during the demo.
 
+* When running tests, first two tests fail sometimes. Rerun the command `catkin_make run_tests` to make the tests pass.
+
 ## Author
 
-Miguel Angel Maestre Trueba. Second year M. Eng in Robotics graduate student, working as research assistant in robotics/computer vision application in the Autonomy, Robotics and Cognition Lab in the University of Maryland, College Park.
+Miguel Angel Maestre Trueba. Second year M. Eng in Robotics graduate student, working as research assistant in robotics/computer vision applications in the Autonomy, Robotics and Cognition Lab in the University of Maryland, College Park.
 
 ## License
 

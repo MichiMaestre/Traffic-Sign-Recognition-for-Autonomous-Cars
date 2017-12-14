@@ -44,7 +44,7 @@ TEST(TestRos, PubSubTest) {
 
     testclass pubsub;
 
-    ros::Rate loop_rate(2);
+    ros::Rate loop_rate(10);
 
     // Publisher to sign messages
     ros::Publisher signPub = n.advertise<traffic_sign_recognition::sign>(
@@ -113,7 +113,7 @@ TEST(TestRos, velTest) {
  *@return none
  */
 void pthread(void) {
-    ros::Rate loop_rate(2);
+    ros::Rate loop_rate(10);
     while (ros::ok()) {
         ros::spinOnce();
         loop_rate.sleep();
